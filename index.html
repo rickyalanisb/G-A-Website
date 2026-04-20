@@ -105,7 +105,10 @@
       display: flex;
       flex-direction: column-reverse;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
+    }
+    @media (min-width: 640px) {
+      .e-counter { align-items: center; }
     }
     .e-counter-number-wrapper {
       display: flex;
@@ -538,7 +541,7 @@
       </div>
 
       <!-- Stats strip — Elementor counter style -->
-      <div class="hero-stats flex flex-wrap gap-10 mt-12 pt-8 border-t border-white/10 lg:mt-16 lg:pt-10">
+      <div class="hero-stats grid grid-cols-2 sm:flex sm:flex-wrap gap-8 sm:gap-10 mt-12 pt-8 border-t border-white/10 lg:mt-16 lg:pt-10">
 
         <div class="e-counter">
           <p class="e-counter-title">Proyectos</p>
@@ -1947,25 +1950,39 @@
     bar2.style.opacity = '1';
   }));
 
-  // ── Elementor-style counter animation ──
+  // ── Counter animation (scroll-triggered) ──
+  // Start all counters at 0 so they don't flash the final value before animating
+  document.querySelectorAll('.e-counter-number[data-target]').forEach(function(el) {
+    el.textContent = '0';
+  });
+
   function animateCounter(el) {
+    if (el.dataset.animated) return;
+    el.dataset.animated = 'true';
     var target = +el.getAttribute('data-target');
     var duration = 1800;
     var start = null;
     function step(ts) {
       if (!start) start = ts;
       var progress = Math.min((ts - start) / duration, 1);
-      // easeOutExpo
       var eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
       el.textContent = Math.round(eased * target);
       if (progress < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
   }
-  // Trigger after hero entrance animation finishes
-  setTimeout(function() {
-    document.querySelectorAll('.e-counter-number[data-target]').forEach(animateCounter);
-  }, 1400);
+
+  // Fire when the stats strip scrolls into view
+  var statsStrip = document.querySelector('.hero-stats');
+  if (statsStrip) {
+    var counterObs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        document.querySelectorAll('.e-counter-number[data-target]').forEach(animateCounter);
+        counterObs.disconnect();
+      }
+    }, { threshold: 0.5 });
+    counterObs.observe(statsStrip);
+  }
 
   // Scroll-triggered fade-in
   const fadeEls = document.querySelectorAll('.fade-in');
@@ -2152,9 +2169,10 @@
   .footer-cols { column-gap: 0; row-gap: 32px; flex-direction: column; align-items: center; }
 }
 
-/* 5. Hero stats: tighter gap on mobile */
-@media (max-width: 640px) {
-  .hero-stats { gap: 1.5rem !important; }
+/* 5. Hero stats: add a subtle divider between the two columns on mobile */
+@media (max-width: 639px) {
+  .hero-stats { border-collapse: separate; }
+  .hero-stats .e-counter:nth-child(odd) { padding-right: 1.5rem; border-right: 1px solid rgba(255,255,255,0.1); }
 }
 
 /* 6. Section headings: slightly smaller on mobile to avoid wrapping */
