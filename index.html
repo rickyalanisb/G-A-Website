@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>G&A Coisisa — Construcción e Ingeniería</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange:     '#F07000',
+              'orange-light': '#FF9520',
+              'orange-dark':  '#C55A00',
+              gray:       '#3A3A3A',
+              'gray-dark':'#1E1E1E',
+              'gray-mid': '#555555',
+              'gray-light':'#8A8A8A',
+              cream:      '#F6F4F0',
+            }
+          },
+          fontFamily: {
+            display: ['Oswald', 'sans-serif'],
+            body:    ['Inter', 'sans-serif'],
+          },
+          letterSpacing: {
+            tightest: '-0.04em',
+          },
+          lineHeight: {
+            relaxed2: '1.75',
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: #3A3A3A; background: #F6F4F0; overflow-x: hidden; }
+
+    /* Grain texture overlay */
+    .grain::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1;
+    }
+
+    /* Nav */
+    nav { transition: background 0.35s cubic-bezier(.4,0,.2,1), box-shadow 0.35s cubic-bezier(.4,0,.2,1); }
+    nav.scrolled { background: rgba(30,30,30,0.97) !important; box-shadow: 0 2px 32px rgba(0,0,0,0.35); }
+
+    /* Orange accent line */
+    .accent-line { display: block; width: 48px; height: 4px; background: linear-gradient(90deg,#F07000,#FF9520); border-radius: 2px; margin-bottom: 16px; }
+
+    /* Section headings */
+    .section-heading { font-family: 'Oswald', sans-serif; font-size: clamp(2.2rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: #1E1E1E; }
+    .section-heading-light { color: #F6F4F0; }
+
+    /* Hero */
+    .hero-bg {
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(240,112,0,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 20% 80%, rgba(30,30,30,0.8) 0%, transparent 70%),
+        linear-gradient(160deg, #1E1E1E 0%, #2D2D2D 40%, #3A3A3A 100%);
+    }
+
+    /* Layered card shadow */
+    .card-shadow {
+      box-shadow:
+        0 1px 2px rgba(240,112,0,0.04),
+        0 4px 12px rgba(0,0,0,0.06),
+        0 16px 32px rgba(0,0,0,0.08);
+    }
+    .card-shadow-hover {
+      box-shadow:
+        0 2px 4px rgba(240,112,0,0.08),
+        0 8px 24px rgba(240,112,0,0.12),
+        0 24px 48px rgba(0,0,0,0.14);
+    }
+
+    /* Service card */
+    .service-card { transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s cubic-bezier(.4,0,.2,1); }
+    .service-card:hover { transform: translateY(-6px); }
+    .service-card:hover { box-shadow: 0 2px 4px rgba(240,112,0,0.08), 0 8px 24px rgba(240,112,0,0.12), 0 24px 48px rgba(0,0,0,0.14); }
+
+    /* Project card */
+    .project-card { transition: transform 0.3s cubic-bezier(.34,1.56,.64,1); overflow: hidden; }
+    .project-card:hover { transform: translateY(-4px); }
+    .project-card:hover .project-overlay { opacity: 1; }
+    .project-card:hover .project-img { transform: scale(1.05); }
+    .project-overlay { opacity: 0; transition: opacity 0.3s cubic-bezier(.4,0,.2,1); }
+    .project-img { transition: transform 0.6s cubic-bezier(.22,1,.36,1); }
+    .project-card:hover .project-img { transition: transform 0.08s linear; }
+
+    /* ── Elementor-style counter ── */
+    .e-counter {
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: center;
+      align-items: center;
+    }
+    .e-counter-number-wrapper {
+      display: flex;
+      align-items: baseline;
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(2.8rem, 4.5vw, 4.1rem);
+      font-weight: 600;
+      line-height: 1;
+      color: #F07000;
+      letter-spacing: -0.02em;
+      text-shadow: 0 0 48px rgba(240,112,0,0.32);
+    }
+    .e-counter-prefix {
+      flex-grow: 1;
+      text-align: end;
+      white-space: pre-wrap;
+      font-size: 0.56em;
+      padding-bottom: 0.15em;
+    }
+    .e-counter-suffix {
+      flex-grow: 1;
+      text-align: start;
+      white-space: pre-wrap;
+      font-size: 0.56em;
+      padding-bottom: 0.15em;
+    }
+    .e-counter-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 400;
+      line-height: 2.5;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(246,244,240,0.42);
+      margin: 0; padding: 0;
+      text-align: center;
+    }
+
+    /* ══ Sneaky Button (button06) ══ */
+    .button06 {
+      position: relative; display: inline-flex; align-items: stretch;
+      text-decoration: none; cursor: pointer; border: none; background: none; padding: 0;
+      color: #fff; overflow: visible; vertical-align: middle;
+      transition: transform 0.2s cubic-bezier(.34,1.56,.64,1);
+    }
+    .button06:hover  { transform: translateY(-2px); }
+    .button06:active { transform: translateY(0); }
+    .button06:focus-visible { outline: 3px solid #FF9520; outline-offset: 3px; }
+    /* Bg lives on its own span so border-radius clips correctly without overflow:hidden on wrapper */
+    .button06_bg {
+      position: absolute; inset: 0; border-radius: 4px;
+      background: linear-gradient(135deg, #F07000 0%, #FF9520 100%);
+      box-shadow: 0 4px 16px rgba(240,112,0,0.35), 0 1px 3px rgba(0,0,0,0.2);
+      transition: filter 0.3s, box-shadow 0.2s; z-index: 0;
+    }
+    .button06:hover .button06_bg {
+      filter: brightness(0.88);
+      box-shadow: 0 8px 28px rgba(240,112,0,0.45), 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .button06_inner {
+      position: relative; z-index: 1; display: block; overflow: hidden;
+      padding: 0 28px;
+      font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .button06_text {
+      display: block; padding: 14px 0; white-space: nowrap;
+      transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+    }
+    .button06_inner::after {
+      content: attr(data-text); position: absolute; top: 100%;
+      left: 28px; display: block; padding: 14px 0; white-space: nowrap;
+      transition: top 0.32s cubic-bezier(.4,0,.2,1);
+    }
+    .button06:hover .button06_text         { transform: translateY(-100%); }
+    .button06:hover .button06_inner::after { top: 0; }
+    /* Icon floats OUTSIDE the button, hidden by default */
+    .button06_icon {
+      position: absolute; left: 100%; top: 0; bottom: 0;
+      margin-left: 10px; display: flex; align-items: center;
+      color: #F07000; opacity: 0; pointer-events: none; z-index: 2;
+      transition: opacity 0.2s;
+    }
+    .button06:hover .button06_icon {
+      opacity: 1;
+      animation: btn06-bounce 0.7s ease-in-out infinite;
+    }
+    .button06_icon-start, .button06_icon-end { display: flex; align-items: center; }
+    .button06_icon-svg { display: block; height: 14px; width: auto; }
+    .button06_icon-mid { display: block; width: 11px; height: 14px; background: currentColor; }
+    /* Small modifier for nav */
+    .button06--sm .button06_inner { padding: 0 20px; font-size: 0.875rem; }
+    .button06--sm .button06_text  { padding: 11px 0; }
+    .button06--sm .button06_inner::after { padding: 11px 0; left: 20px; }
+    .button06--sm .button06_icon-svg { height: 12px; }
+    .button06--sm .button06_icon-mid { height: 12px; width: 9px; }
+    /* Large modifier */
+    .button06--lg .button06_inner { padding: 0 36px; font-size: 1.05rem; }
+    .button06--lg .button06_text  { padding: 18px 0; }
+    .button06--lg .button06_inner::after { padding: 18px 0; left: 36px; }
+    @keyframes btn06-bounce {
+      0%, 100% { transform: translateX(0); }
+      50%       { transform: translateX(5px); }
+    }
+
+    /* CTA button */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, #F07000 0%, #FF9520 100%);
+      color: #fff; font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 14px 32px; border-radius: 4px;
+      box-shadow: 0 4px 16px rgba(240,112,0,0.35), 0 1px 3px rgba(0,0,0,0.2);
+      transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s cubic-bezier(.4,0,.2,1), opacity 0.2s;
+      cursor: pointer; border: none; text-decoration: none;
+    }
+    .btn-primary:hover  { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(240,112,0,0.45), 0 2px 6px rgba(0,0,0,0.2); }
+    .btn-primary:active { transform: translateY(0px); box-shadow: 0 2px 8px rgba(240,112,0,0.25); }
+    .btn-primary:focus-visible { outline: 3px solid #FF9520; outline-offset: 3px; }
+
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: transparent; color: #F6F4F0;
+      font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 13px 30px; border-radius: 4px;
+      border: 2px solid rgba(246,244,240,0.5);
+      transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.2s cubic-bezier(.34,1.56,.64,1);
+      cursor: pointer; text-decoration: none;
+    }
+    .btn-outline:hover  { border-color: #F07000; background: rgba(240,112,0,0.12); color: #fff; transform: translateY(-2px); }
+    .btn-outline:active { transform: translateY(0); }
+    .btn-outline:focus-visible { outline: 3px solid #FF9520; outline-offset: 3px; }
+
+    /* Nav link */
+    .nav-link {
+      font-family: 'Oswald', sans-serif; font-size: 0.95rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+      color: rgba(246,244,240,0.75); text-decoration: none;
+      position: relative; padding-bottom: 4px;
+      transition: color 0.2s;
+    }
+    .nav-link::after { content:''; position:absolute; bottom:0; left:0; width:0; height:2px; background:#F07000; transition: width 0.25s cubic-bezier(.4,0,.2,1); border-radius:1px; }
+    .nav-link:hover { color: #fff; }
+    .nav-link:hover::after { width: 100%; }
+    .nav-link:focus-visible { outline: 2px solid #F07000; outline-offset: 4px; border-radius:2px; }
+
+    /* Form input */
+    .form-input {
+      width: 100%; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(246,244,240,0.15);
+      color: #F6F4F0; font-family: 'Inter', sans-serif; font-size: 0.95rem;
+      padding: 14px 18px; border-radius: 4px;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-input::placeholder { color: rgba(246,244,240,0.35); }
+    .form-input:focus { border-color: #F07000; background: rgba(255,255,255,0.09); box-shadow: 0 0 0 3px rgba(240,112,0,0.15); }
+
+    /* Divider */
+    .orange-divider { width: 100%; height: 4px; background: linear-gradient(90deg, #F07000 0%, #FF9520 40%, transparent 100%); }
+
+    /* Scroll indicator */
+    @keyframes bounce-slow { 0%,100%{ transform:translateY(0);} 50%{transform:translateY(8px);} }
+    .scroll-indicator { animation: bounce-slow 2s ease-in-out infinite; }
+
+    /* Floating value badge */
+    .value-badge { transition: transform 0.25s cubic-bezier(.34,1.56,.64,1); }
+    .value-badge:hover { transform: scale(1.04); }
+
+    /* Section transitions */
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(.4,0,.2,1), transform 0.6s cubic-bezier(.4,0,.2,1); }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Hero entrance animations ── */
+    @keyframes hero-eyebrow  { from { opacity:0; transform:translateX(-18px); } to { opacity:1; transform:translateX(0); } }
+    @keyframes hero-title    { from { opacity:0; transform:translateY(28px);  } to { opacity:1; transform:translateY(0); } }
+    @keyframes hero-sub      { from { opacity:0; transform:translateY(18px);  } to { opacity:0.65; transform:translateY(0); } }
+    @keyframes hero-ctas     { from { opacity:0; transform:translateY(14px);  } to { opacity:1; transform:translateY(0); } }
+    @keyframes hero-stats    { from { opacity:0; transform:translateY(10px);  } to { opacity:1; transform:translateY(0); } }
+    @keyframes logo-entrance { from { opacity:0; transform:scale(0.85);       } to { opacity:1; transform:scale(1); } }
+    @keyframes nav-slide     { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes orange-line   { from { opacity:0; transform:scaleX(0); transform-origin:left; } to { opacity:1; transform:scaleX(1); } }
+
+    .hero-badge    { animation: hero-eyebrow  0.65s cubic-bezier(.4,0,.2,1) 0.05s both; }
+    .hero-eyebrow  { animation: hero-eyebrow  0.7s cubic-bezier(.4,0,.2,1) 0.25s both; }
+    .hero-title    { animation: hero-title    0.75s cubic-bezier(.22,1,.36,1) 0.45s both; }
+    .hero-sub      { animation: hero-sub      0.7s cubic-bezier(.4,0,.2,1) 0.7s both; }
+    .hero-ctas     { animation: hero-ctas     0.6s cubic-bezier(.34,1.56,.64,1) 0.9s both; }
+    .hero-stats    { animation: hero-stats    0.6s cubic-bezier(.4,0,.2,1) 1.1s both; }
+
+    /* ── Animated rotating word ── */
+    .hero-word-clip {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+      height: 1.05em;
+    }
+    #hero-rotating-word {
+      display: inline-block;
+      color: #F07000;
+      will-change: transform, opacity;
+    }
+    /* Pill badge */
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px 7px 7px; border-radius: 100px;
+      border: 1px solid rgba(240,112,0,0.28);
+      background: rgba(240,112,0,0.07);
+      color: rgba(246,244,240,0.82);
+      font-size: 0.8rem; font-family: 'Inter', sans-serif;
+      text-decoration: none;
+      backdrop-filter: blur(6px);
+      transition: border-color 0.25s, background 0.25s, color 0.25s, transform 0.2s cubic-bezier(.34,1.56,.64,1);
+      letter-spacing: 0.01em;
+    }
+    .hero-pill:hover { border-color: rgba(240,112,0,0.6); background: rgba(240,112,0,0.14); color: #fff; transform: translateY(-1px); }
+    .hero-pill:active { transform: translateY(0); }
+    .hero-pill-dot {
+      background: #F07000; color: #fff; border-radius: 100px;
+      padding: 3px 9px; font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap;
+    }
+    .nav-animate   { animation: nav-slide     0.5s cubic-bezier(.4,0,.2,1) 0.05s both; }
+    .logo-animate  { animation: logo-entrance 0.6s cubic-bezier(.34,1.56,.64,1) 0.1s both; }
+
+    /* ── Renta machine card ── */
+    .machine-card {
+      background: #fff; border-radius: 10px; overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 20px rgba(0,0,0,0.07);
+      transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s cubic-bezier(.4,0,.2,1);
+      display: flex; flex-direction: column;
+    }
+    .machine-card:hover { transform: translateY(-6px); box-shadow: 0 4px 8px rgba(240,112,0,0.1), 0 16px 40px rgba(0,0,0,0.13); }
+    .machine-card:hover .machine-img { transform: scale(1.06); }
+    .machine-img { transition: transform 0.5s cubic-bezier(.4,0,.2,1); }
+
+    /* ── Accent line animate on scroll ── */
+    .accent-line-anim { display:block; width:48px; height:4px; background:linear-gradient(90deg,#F07000,#FF9520); border-radius:2px; margin-bottom:16px; transform:scaleX(0); transform-origin:left; transition: transform 0.5s cubic-bezier(.4,0,.2,1) 0.1s; }
+    .visible .accent-line-anim, .accent-line-anim.visible { transform: scaleX(1); }
+
+    /* ── Scroll-driven video section ── */
+    .video-scroll-section { position: relative; height: 280vh; }
+    .video-sticky-wrap {
+      position: sticky; top: 0; height: 100vh;
+      overflow: hidden; background: #1E1E1E;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .video-clip-mask {
+      position: absolute; inset: 0;
+      will-change: clip-path;
+      clip-path: inset(8% 18% round 4px);
+    }
+    .video-clip-mask video {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .video-grain-overlay {
+      position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    }
+    .video-dark-vignette {
+      position: absolute; inset: 0; z-index: 3; pointer-events: none;
+      background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(20,20,20,0.55) 100%);
+    }
+    .video-text-overlay {
+      position: absolute; inset: 0; z-index: 5;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      pointer-events: none; gap: 0;
+    }
+    .video-eyebrow {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: #F07000; font-weight: 500;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+      margin-bottom: 14px;
+    }
+    .video-headline {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(2.4rem, 6.5vw, 6rem);
+      font-weight: 700; letter-spacing: -0.03em; line-height: 1;
+      color: #F6F4F0; text-align: center;
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.8s cubic-bezier(.22,1,.36,1) 0.12s, transform 0.8s cubic-bezier(.22,1,.36,1) 0.12s;
+      text-shadow: 0 2px 32px rgba(0,0,0,0.55);
+    }
+    .video-headline span { color: #F07000; }
+    .video-subline {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.85rem, 1.6vw, 1.1rem);
+      color: rgba(246,244,240,0.7); text-align: center;
+      font-weight: 300; letter-spacing: 0.01em; line-height: 1.7;
+      max-width: 440px;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 0.7s cubic-bezier(.4,0,.2,1) 0.28s, transform 0.7s cubic-bezier(.4,0,.2,1) 0.28s;
+      margin-top: 18px;
+    }
+    .video-text-overlay.text-visible .video-eyebrow,
+    .video-text-overlay.text-visible .video-headline,
+    .video-text-overlay.text-visible .video-subline {
+      opacity: 1; transform: translateY(0);
+    }
+    .video-orange-bar {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 4px; z-index: 6;
+      background: linear-gradient(90deg, #F07000, #FF9520 50%, transparent 100%);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.8s cubic-bezier(.4,0,.2,1);
+    }
+    .video-orange-bar.bar-visible { transform: scaleX(1); }
+    .video-scroll-hint {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 8px;
+      opacity: 0; transition: opacity 0.6s ease 0.5s;
+    }
+    .video-scroll-hint.hint-visible { opacity: 1; }
+    .video-scroll-hint span {
+      font-family: 'Oswald', sans-serif; font-size: 0.65rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: rgba(246,244,240,0.45);
+    }
+    .video-scroll-hint-line {
+      width: 1px; height: 42px;
+      background: linear-gradient(to bottom, rgba(240,112,0,0.7), transparent);
+      animation: scroll-hint-anim 1.6s ease-in-out infinite;
+    }
+    @keyframes scroll-hint-anim {
+      0%,100% { transform: scaleY(1); transform-origin: top; opacity:0.7; }
+      50%     { transform: scaleY(0.4); transform-origin: top; opacity:0.3; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 inset-x-0 z-50 bg-transparent nav-animate">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 py-3 flex items-center justify-between">
+    <a href="#inicio" class="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 rounded logo-animate">
+      <img src="Marca/G&A Logo.png" alt="G&A Logo" class="h-14 w-auto object-contain drop-shadow-lg" style="filter:drop-shadow(0 2px 8px rgba(240,112,0,0.25));" />
+    </a>
+
+    <!-- Desktop links -->
+    <ul class="hidden lg:flex items-center gap-8">
+      <li><a href="#servicios" class="nav-link">Servicios</a></li>
+      <li><a href="#rentas"    class="nav-link">Rentas</a></li>
+      <li><a href="#proyectos" class="nav-link">Proyectos</a></li>
+      <li><a href="#nosotros"  class="nav-link">Nosotros</a></li>
+      <li><a href="#contacto"  class="nav-link">Contacto</a></li>
+    </ul>
+
+    <a href="#contacto" class="button06 button06--sm hidden lg:inline-flex">
+      <span class="button06_bg"></span>
+      <span data-text="Solicitar Cotización" class="button06_inner"><span class="button06_text">Solicitar Cotización</span></span>
+      <span class="button06_icon" aria-hidden="true"><span class="button06_icon-start"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 16" class="button06_icon-svg"><path fill="currentColor" d="M1.113 9.327a2.065 2.065 0 0 1 0-2.654L6.4.37C6.596.135 6.886 0 7.191 0h.55v16h-.55c-.305 0-.595-.135-.79-.369L1.112 9.327Z"/></svg></span><span class="button06_icon-mid"></span><span class="button06_icon-end"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 16" class="button06_icon-svg"><path fill="currentColor" fill-rule="evenodd" d="M5.288 1.696A1.032 1.032 0 0 0 4.497 0H1.032C.462 0 0 .462 0 1.032v13.936C0 15.538.462 16 1.032 16h3.465c.876 0 1.354-1.024.79-1.696L1.114 9.327a2.065 2.065 0 0 1 0-2.654l4.175-4.977Z" clip-rule="evenodd"/><path fill="currentColor" d="M0 0h1.548v1.548H0zM0 14.452h1.548V16H0z"/></svg></span></span>
+    </a>
+
+    <!-- Mobile toggle -->
+    <button id="menu-toggle" class="lg:hidden flex flex-col gap-1.5 p-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400" aria-label="Menú">
+      <span class="block w-6 h-0.5 bg-white transition-transform origin-center" id="bar1"></span>
+      <span class="block w-6 h-0.5 bg-white transition-opacity"                  id="bar2"></span>
+      <span class="block w-6 h-0.5 bg-white transition-transform origin-center" id="bar3"></span>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="lg:hidden hidden bg-brand-gray-dark/95 backdrop-blur-sm border-t border-white/10">
+    <ul class="flex flex-col px-6 py-6 gap-5">
+      <li><a href="#servicios" class="nav-link block">Servicios</a></li>
+      <li><a href="#rentas"    class="nav-link block">Rentas</a></li>
+      <li><a href="#proyectos" class="nav-link block">Proyectos</a></li>
+      <li><a href="#nosotros"  class="nav-link block">Nosotros</a></li>
+      <li><a href="#contacto"  class="nav-link block">Contacto</a></li>
+      <li><a href="#contacto" class="button06 button06--sm inline-flex mt-2"><span class="button06_bg"></span><span data-text="Solicitar Cotización" class="button06_inner"><span class="button06_text">Solicitar Cotización</span></span><span class="button06_icon" aria-hidden="true"><span class="button06_icon-start"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 16" class="button06_icon-svg"><path fill="currentColor" d="M1.113 9.327a2.065 2.065 0 0 1 0-2.654L6.4.37C6.596.135 6.886 0 7.191 0h.55v16h-.55c-.305 0-.595-.135-.79-.369L1.112 9.327Z"/></svg></span><span class="button06_icon-mid"></span><span class="button06_icon-end"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 16" class="button06_icon-svg"><path fill="currentColor" fill-rule="evenodd" d="M5.288 1.696A1.032 1.032 0 0 0 4.497 0H1.032C.462 0 0 .462 0 1.032v13.936C0 15.538.462 16 1.032 16h3.465c.876 0 1.354-1.024.79-1.696L1.114 9.327a2.065 2.065 0 0 1 0-2.654l4.175-4.977Z" clip-rule="evenodd"/><path fill="currentColor" d="M0 0h1.548v1.548H0zM0 14.452h1.548V16H0z"/></svg></span></span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<section id="inicio" class="relative min-h-screen hero-bg grain flex flex-col justify-center overflow-hidden">
+  <!-- Background construction image with color treatment -->
+  <div class="absolute inset-0 z-0">
+    <img src="Marca/FacebookBackground.png" alt="" class="w-full h-full object-cover object-center" style="opacity:0.45;" />
+    <div class="absolute inset-0" style="background:linear-gradient(100deg, rgba(20,20,20,0.92) 0%, rgba(30,30,30,0.75) 45%, rgba(20,20,20,0.55) 100%);"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-gray-dark/70"></div>
+  </div>
+
+  <!-- Structural grid lines -->
+  <div class="absolute inset-0 z-0 opacity-5" style="background-image: linear-gradient(rgba(246,244,240,0.5) 1px,transparent 1px),linear-gradient(90deg,rgba(246,244,240,0.5) 1px,transparent 1px); background-size: 80px 80px;"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 pt-32 pb-24">
+    <div class="max-w-3xl">
+
+      <!-- Pill badge -->
+      <div class="mb-7 hero-badge">
+        <a href="https://drive.google.com/file/d/1NDd_YAvbO16cRQ3Leq3Ja910OFSB2Gbl/view?usp=drive_link"
+           target="_blank" rel="noopener noreferrer" class="hero-pill">
+          <span class="hero-pill-dot">Portafolio</span>
+          Ver nuestros proyectos terminados
+          <svg xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+      </div>
+
+      <!-- Eyebrow -->
+      <div class="flex items-center gap-3 mb-6 hero-eyebrow">
+        <span class="block w-10 h-0.5 bg-brand-orange"></span>
+        <span style="font-family:'Oswald',sans-serif; font-size:0.8rem; letter-spacing:0.18em; text-transform:uppercase; color:#F07000; font-weight:500;">Construcción e Ingeniería</span>
+      </div>
+
+      <!-- Headline with animated rotating word -->
+      <h1 class="hero-title" style="font-family:'Oswald',sans-serif; font-size:clamp(3rem,7vw,5.5rem); font-weight:700; line-height:1.05; letter-spacing:-0.04em; color:#F6F4F0;">
+        Construimos<br />
+        <span class="hero-word-clip">
+          <span id="hero-rotating-word">el Futuro</span>
+        </span><br />
+        <span style="font-weight:400; opacity:0.8;">de México</span>
+      </h1>
+
+      <!-- Subheadline -->
+      <p class="hero-sub" style="font-family:'Inter',sans-serif; font-size:clamp(1rem,1.8vw,1.2rem); line-height:1.75; color:rgba(246,244,240,0.65); margin-top:24px; max-width:560px;">
+        Más de 35 años diseñando y ejecutando proyectos de construcción, remodelación e ingeniería civil con los más altos estándares de calidad y seguridad.
+      </p>
+
+      <!-- CTAs -->
+      <div class="flex flex-wrap gap-4 mt-10 hero-ctas">
+        <a href="#proyectos" class="button06">
+          <span class="button06_bg"></span>
+          <span data-text="Ver Proyectos" class="button06_inner"><span class="button06_text">Ver Proyectos</span></span>
+          <span class="button06_icon" aria-hidden="true"><span class="button06_icon-start"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 16" class="button06_icon-svg"><path fill="currentColor" d="M1.113 9.327a2.065 2.065 0 0 1 0-2.654L6.4.37C6.596.135 6.886 0 7.191 0h.55v16h-.55c-.305 0-.595-.135-.79-.369L1.112 9.327Z"/></svg></span><span class="button06_icon-mid"></span><span class="button06_icon-end"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 16" class="button06_icon-svg"><path fill="currentColor" fill-rule="evenodd" d="M5.288 1.696A1.032 1.032 0 0 0 4.497 0H1.032C.462 0 0 .462 0 1.032v13.936C0 15.538.462 16 1.032 16h3.465c.876 0 1.354-1.024.79-1.696L1.114 9.327a2.065 2.065 0 0 1 0-2.654l4.175-4.977Z" clip-rule="evenodd"/><path fill="currentColor" d="M0 0h1.548v1.548H0zM0 14.452h1.548V16H0z"/></svg></span></span>
+        </a>
+        <a href="#contacto" class="btn-outline">Contáctanos</a>
+      </div>
+
+      <!-- Stats strip — Elementor counter style -->
+      <div class="flex flex-wrap gap-10 mt-16 pt-10 border-t border-white/10 hero-stats">
+
+        <div class="e-counter">
+          <p class="e-counter-title">Proyectos</p>
+          <div class="e-counter-number-wrapper">
+            <span class="e-counter-prefix">+</span>
+            <span class="e-counter-number" data-target="200">200</span>
+            <span class="e-counter-suffix"></span>
+          </div>
+        </div>
+
+        <div class="w-px bg-white/10 self-stretch hidden sm:block"></div>
+
+        <div class="e-counter">
+          <p class="e-counter-title">Años de exp.</p>
+          <div class="e-counter-number-wrapper">
+            <span class="e-counter-prefix"></span>
+            <span class="e-counter-number" data-target="35">35</span>
+            <span class="e-counter-suffix">+</span>
+          </div>
+        </div>
+
+        <div class="w-px bg-white/10 self-stretch hidden sm:block"></div>
+
+        <div class="e-counter">
+          <p class="e-counter-title">Satisfacción</p>
+          <div class="e-counter-number-wrapper">
+            <span class="e-counter-prefix"></span>
+            <span class="e-counter-number" data-target="99">99</span>
+            <span class="e-counter-suffix">%</span>
+          </div>
+        </div>
+
+        <div class="w-px bg-white/10 self-stretch hidden sm:block"></div>
+
+        <div class="e-counter">
+          <p class="e-counter-title">Especialistas</p>
+          <div class="e-counter-number-wrapper">
+            <span class="e-counter-prefix"></span>
+            <span class="e-counter-number" data-target="50">50</span>
+            <span class="e-counter-suffix">+</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 scroll-indicator">
+    <span style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(246,244,240,0.35);">Scroll</span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="#F07000" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+  </div>
+
+  <script>
+  (function(){
+    var words = ['el Futuro','el Progreso','la Excelencia','tu Proyecto','el Porvenir'];
+    var i = 0;
+    var el = document.getElementById('hero-rotating-word');
+    if(!el) return;
+    function next(){
+      el.style.transition = 'transform 0.38s cubic-bezier(0.4,0,0.6,1), opacity 0.3s ease';
+      el.style.transform = 'translateY(-110%)';
+      el.style.opacity = '0';
+      setTimeout(function(){
+        i = (i + 1) % words.length;
+        el.textContent = words[i];
+        el.style.transition = 'none';
+        el.style.transform = 'translateY(110%)';
+        el.style.opacity = '0';
+        void el.offsetWidth;
+        el.style.transition = 'transform 0.55s cubic-bezier(0.34,1.56,0.64,1), opacity 0.42s ease';
+        el.style.transform = 'translateY(0)';
+        el.style.opacity = '1';
+      }, 400);
+    }
+    setInterval(next, 2600);
+  })();
+  </script>
+</section>
+
+<!-- Orange divider -->
+<div class="orange-divider"></div>
+
+<!-- ══════════════════════════════ VIDEO SCROLL ══════════════════════════════ -->
+<section class="video-scroll-section" id="video-reveal">
+  <div class="video-sticky-wrap">
+
+    <div class="video-clip-mask" id="videoClipMask">
+      <video
+        id="scrollVideo"
+        src="Marca/G%26A%20Bobcat%20Logo.mp4"
+        autoplay muted playsinline
+        style="filter: brightness(0.82) saturate(1.1);"
+      ></video>
+    </div>
+
+    <div class="video-grain-overlay"></div>
+    <div class="video-dark-vignette"></div>
+    <div class="video-orange-bar" id="videoOrangeBar"></div>
+
+    <div class="video-text-overlay" id="videoTextOverlay">
+      <div class="video-eyebrow">G&amp;A Coisisa — Desde 1986</div>
+      <h2 class="video-headline">Construimos con<br><span>precisión.</span></h2>
+      <p class="video-subline">Cada proyecto es una muestra de rigor técnico, materiales de primera y compromiso con el resultado.</p>
+    </div>
+
+    <div class="video-scroll-hint" id="videoScrollHint">
+      <span>scroll</span>
+      <div class="video-scroll-hint-line"></div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function() {
+  var section  = document.getElementById('video-reveal');
+  var mask     = document.getElementById('videoClipMask');
+  var overlay  = document.getElementById('videoTextOverlay');
+  var bar      = document.getElementById('videoOrangeBar');
+  var hint     = document.getElementById('videoScrollHint');
+  var video    = document.getElementById('scrollVideo');
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+  /* Stop looping when video ends */
+  video.addEventListener('ended', function() { video.pause(); });
+
+  function onScroll() {
+    var rect     = section.getBoundingClientRect();
+    var total    = section.offsetHeight - window.innerHeight;
+    var progress = clamp(-rect.top / total, 0, 1);
+
+    /* Clip-path expand (0→0.45) */
+    var ep1 = ease(clamp(progress / 0.45, 0, 1));
+    mask.style.clipPath = 'inset(' + lerp(8,0,ep1) + '% ' + lerp(18,0,ep1) + '% round ' + lerp(4,0,ep1) + 'px)';
+
+    hint.classList.toggle('hint-visible', progress < 0.12);
+    overlay.classList.toggle('text-visible', progress > 0.25);
+    bar.classList.toggle('bar-visible', progress > 0.50);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
+<!-- ══════════════════════════════ SERVICIOS ══════════════════════════════ -->
+
+<section id="servicios" class="py-24 lg:py-32 bg-brand-cream">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="fade-in">
+      <span class="accent-line"></span>
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
+        <div>
+          <h2 class="section-heading">Nuestros Servicios</h2>
+          <p style="font-size:1.05rem; line-height:1.75; color:#555; margin-top:12px; max-width:480px;">Soluciones integrales de construcción e ingeniería para proyectos residenciales, comerciales e industriales.</p>
+        </div>
+        <a href="#contacto" class="button06 self-start lg:self-auto"><span class="button06_bg"></span><span data-text="Solicitar Servicio" class="button06_inner"><span class="button06_text">Solicitar Servicio</span></span><span class="button06_icon" aria-hidden="true"><span class="button06_icon-start"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 16" class="button06_icon-svg"><path fill="currentColor" d="M1.113 9.327a2.065 2.065 0 0 1 0-2.654L6.4.37C6.596.135 6.886 0 7.191 0h.55v16h-.55c-.305 0-.595-.135-.79-.369L1.112 9.327Z"/></svg></span><span class="button06_icon-mid"></span><span class="button06_icon-end"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 16" class="button06_icon-svg"><path fill="currentColor" fill-rule="evenodd" d="M5.288 1.696A1.032 1.032 0 0 0 4.497 0H1.032C.462 0 0 .462 0 1.032v13.936C0 15.538.462 16 1.032 16h3.465c.876 0 1.354-1.024.79-1.696L1.114 9.327a2.065 2.065 0 0 1 0-2.654l4.175-4.977Z" clip-rule="evenodd"/><path fill="currentColor" d="M0 0h1.548v1.548H0zM0 14.452h1.548V16H0z"/></svg></span></span></a>
+      </div>
+    </div>
+
+    <!-- Flip Cards Grid -->
+    <div class="svc-grid fade-in" style="transition-delay:0.15s;">
+
+      <!-- Card 1: Gas Natural -->
+      <div class="svc-flip">
+        <div class="svc-flip-inner">
+          <div class="svc-front">
+            <div class="svc-front-bg" style="background-image:linear-gradient(145deg,rgba(26,14,0,0.82) 0%,rgba(20,20,20,0.70) 50%,rgba(40,20,0,0.85) 100%),url('Marca/Obra Gas.jpeg');background-size:cover;background-position:center;"></div>
+            <div class="svc-front-glow" style="background:radial-gradient(ellipse 75% 65% at 50% 55%,rgba(240,112,0,0.22) 0%,transparent 65%);"></div>
+            <div class="svc-front-content">
+              <div class="svc-icon-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="none" viewBox="0 0 24 24" stroke="#F07000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/></svg>
+              </div>
+              <h3 class="svc-front-title">Gas Natural</h3>
+              <p class="svc-front-sub">Redes de distribución e infraestructura de gas</p>
+            </div>
+          </div>
+          <div class="svc-back">
+            <div class="svc-back-overlay">
+              <h3 class="svc-back-title">Gas Natural</h3>
+              <ul class="svc-back-list">
+                <li>Construcción de redes de acero</li>
+                <li>Construcción de redes de polietileno</li>
+                <li>Renovación de red</li>
+                <li>Instalación de acometidas</li>
+                <li>Instalación de casetas de regulación</li>
+              </ul>
+              <a href="#contacto" class="svc-back-btn">Solicitar Servicio</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Agua y Drenaje -->
+      <div class="svc-flip">
+        <div class="svc-flip-inner">
+          <div class="svc-front">
+            <div class="svc-front-bg" style="background-image:linear-gradient(145deg,rgba(0,20,30,0.82) 0%,rgba(20,20,20,0.70) 50%,rgba(0,28,40,0.85) 100%),url('Marca/Agua y drenaje.jpg');background-size:cover;background-position:center;"></div>
+            <div class="svc-front-glow" style="background:radial-gradient(ellipse 70% 60% at 50% 55%,rgba(240,112,0,0.20) 0%,transparent 65%);"></div>
+            <div class="svc-front-content">
+              <div class="svc-icon-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="none" viewBox="0 0 24 24" stroke="#F07000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>
+              </div>
+              <h3 class="svc-front-title">Agua y Drenaje</h3>
+              <p class="svc-front-sub">Instalación de redes hidráulicas y sanitarias</p>
+            </div>
+          </div>
+          <div class="svc-back">
+            <div class="svc-back-overlay">
+              <h3 class="svc-back-title">Agua y Drenaje</h3>
+              <ul class="svc-back-list">
+                <li>Instalación de red de agua potable</li>
+                <li>Instalación de drenaje pluvial</li>
+                <li>Instalación de red de drenaje sanitario</li>
+              </ul>
+              <a href="#contacto" class="svc-back-btn">Solicitar Servicio</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Infraestructura para Urbanización -->
+      <div class="svc-flip">
+        <div class="svc-flip-inner">
+          <div class="svc-front">
+            <div class="svc-front-bg" style="background-image:linear-gradient(145deg,rgba(10,16,0,0.82) 0%,rgba(20,20,20,0.70) 50%,rgba(20,28,0,0.85) 100%),url('Marca/Fibra Optica.jpeg');background-size:cover;background-position:center;"></div>
+            <div class="svc-front-glow" style="background:radial-gradient(ellipse 72% 62% at 50% 52%,rgba(240,112,0,0.20) 0%,transparent 65%);"></div>
+            <div class="svc-front-content">
+              <div class="svc-icon-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="none" viewBox="0 0 24 24" stroke="#F07000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+              </div>
+              <h3 class="svc-front-title">Infraestructura para Urbanización</h3>
+              <p class="svc-front-sub">Construcción civil y obra de urbanización</p>
+            </div>
+          </div>
+          <div class="svc-back">
+            <div class="svc-back-overlay">
+              <h3 class="svc-back-title">Infraestructura para Urbanización</h3>
+              <ul class="svc-back-list svc-back-list--2col">
+                <li>Construcción de casas</li>
+                <li>Bardas perimetrales</li>
+                <li>Construcción de banquetas</li>
+                <li>Repavimentación</li>
+                <li>Construcción general</li>
+                <li>Alumbrado público</li>
+                <li>Muros de contención y escarpeados</li>
+              </ul>
+              <a href="#contacto" class="svc-back-btn">Solicitar Servicio</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Mantenimiento Industrial -->
+      <div class="svc-flip">
+        <div class="svc-flip-inner">
+          <div class="svc-front">
+            <div class="svc-front-bg" style="background-image:linear-gradient(145deg,rgba(22,10,0,0.82) 0%,rgba(20,20,20,0.70) 50%,rgba(36,14,0,0.85) 100%),url('Marca/gestion-de-clima-industrial-2.jpg');background-size:cover;background-position:center;"></div>
+            <div class="svc-front-glow" style="background:radial-gradient(ellipse 75% 65% at 50% 55%,rgba(240,112,0,0.22) 0%,transparent 65%);"></div>
+            <div class="svc-front-content">
+              <div class="svc-icon-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" fill="none" viewBox="0 0 24 24" stroke="#F07000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </div>
+              <h3 class="svc-front-title">Mantenimiento Industrial</h3>
+              <p class="svc-front-sub">Instalaciones y sistemas para naves industriales</p>
+            </div>
+          </div>
+          <div class="svc-back">
+            <div class="svc-back-overlay">
+              <h3 class="svc-back-title">Mantenimiento Industrial</h3>
+              <ul class="svc-back-list svc-back-list--2col">
+                <li>Instalación de fibra óptica</li>
+                <li>Tensado de líneas aéreas</li>
+                <li>Sistemas de agua</li>
+                <li>Sistemas de drenaje</li>
+                <li>Sistema contra incendio</li>
+                <li>Luminarias y postes</li>
+                <li>Armado de naves industriales</li>
+                <li>Red eléctrica</li>
+                <li>Subestaciones eléctricas</li>
+                <li>Pisos pulidos industriales</li>
+              </ul>
+              <a href="#contacto" class="svc-back-btn">Solicitar Servicio</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /svc-grid -->
+  </div>
+</section>
+
+<style>
+/* ── Flip card grid ── */
+.svc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+@media (max-width: 640px) { .svc-grid { grid-template-columns: 1fr; } }
+
+/* ── Flip card container ── */
+.svc-flip {
+  perspective: 1200px;
+  height: 400px;
+  cursor: pointer;
+}
+
+/* ── Inner (3D stage) ── */
+.svc-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.34, 1.1, 0.64, 1),
+              background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s;
+}
+.svc-flip:hover .svc-flip-inner,
+.svc-flip.flipped .svc-flip-inner {
+  transform: rotateX(180deg);
+}
+
+/* ── Shared face styles ── */
+.svc-front,
+.svc-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 40px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: background 0.3s, border 0.3s, border-radius 0.3s, box-shadow 0.3s;
+}
+
+/* ── Front face ── */
+.svc-front {
+  box-shadow:
+    0 1px 2px rgba(240,112,0,0.04),
+    0 4px 16px rgba(0,0,0,0.18),
+    0 0 0 1px rgba(240,112,0,0.14);
+}
+.svc-front-bg,
+.svc-front-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.svc-front-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px;
+  text-align: center;
+}
+.svc-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 24px;
+  background: rgba(240,112,0,0.11);
+  border: 1.5px solid rgba(240,112,0,0.30);
+  margin-bottom: 22px;
+  box-shadow: 0 0 40px rgba(240,112,0,0.18), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.svc-front-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #F6F4F0;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.55);
+  margin: 0 0 10px;
+}
+.svc-front-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(246,244,240,0.45);
+  line-height: 1.5;
+  margin: 0;
+  max-width: 260px;
+}
+
+/* ── Back face ── */
+.svc-back {
+  transform: rotateX(180deg);
+  transform-style: preserve-3d;
+  box-shadow:
+    0 2px 4px rgba(240,112,0,0.08),
+    0 8px 32px rgba(240,112,0,0.18),
+    0 24px 56px rgba(0,0,0,0.22);
+}
+.svc-back-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: #000000B8;
+  border-radius: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  padding: 32px 36px;
+  transform: translateZ(0.1px);
+  transition: background 0.3s, border-radius 0.3s;
+}
+.svc-back-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #F07000;
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.svc-back-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  width: 100%;
+}
+.svc-back-list li {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.84rem;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.55;
+  padding: 3px 0 3px 16px;
+  position: relative;
+}
+.svc-back-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #F07000;
+}
+.svc-back-list--2col {
+  columns: 2;
+  column-gap: 18px;
+}
+.svc-back-list--2col li { break-inside: avoid; }
+.svc-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(135deg, #C55A00, #F07000 50%, #FF9520);
+  padding: 9px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(240,112,0,0.38);
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+  flex-shrink: 0;
+  margin-top: auto;
+}
+.svc-back-btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(240,112,0,0.52); }
+.svc-back-btn:active { transform: translateY(0); }
+.svc-back-btn:focus-visible { outline: 2px solid #FF9520; outline-offset: 3px; }
+</style>
+
+<script>
+/* Touch-flip support for mobile */
+(function(){
+  document.querySelectorAll('.svc-flip').forEach(function(card){
+    card.addEventListener('click', function(){
+      card.classList.toggle('flipped');
+    });
+  });
+}());
+</script>
+
+
+<!-- ══════════════════════════════ RENTAS ══════════════════════════════ -->
+<section id="rentas" class="py-24 lg:py-32 relative overflow-hidden" style="background: linear-gradient(160deg,#1E1E1E 0%,#252525 100%);">
+  <!-- Subtle radial glow -->
+  <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 65% 50% at 15% 40%, rgba(240,112,0,0.07) 0%, transparent 60%);"></div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+    <!-- Header -->
+    <div class="fade-in">
+      <span class="accent-line"></span>
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-5">
+        <div>
+          <h2 class="section-heading section-heading-light">Renta de Maquinaria</h2>
+          <p style="font-size:1.05rem; line-height:1.75; color:rgba(246,244,240,0.55); margin-top:12px; max-width:520px;">
+            Equipo pesado disponible para tu proyecto. Toda la maquinaria se renta <strong style="color:#F07000;">con operador</strong> — el cliente únicamente provee el diésel.
+          </p>
+        </div>
+        <a href="https://claude.ai/public/artifacts/f33d2404-8fcc-4a77-98f4-40286f2c4faf" target="_blank" rel="noopener" class="button06 self-start lg:self-auto" style="white-space:nowrap;">
+          <span class="button06_bg"></span>
+          <span data-text="Cotizador Interactivo" class="button06_inner"><span class="button06_text">Cotizador Interactivo</span></span>
+          <span class="button06_icon" aria-hidden="true"><span class="button06_icon-start"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 16" class="button06_icon-svg"><path fill="currentColor" d="M1.113 9.327a2.065 2.065 0 0 1 0-2.654L6.4.37C6.596.135 6.886 0 7.191 0h.55v16h-.55c-.305 0-.595-.135-.79-.369L1.112 9.327Z"/></svg></span><span class="button06_icon-mid"></span><span class="button06_icon-end"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 16" class="button06_icon-svg"><path fill="currentColor" fill-rule="evenodd" d="M5.288 1.696A1.032 1.032 0 0 0 4.497 0H1.032C.462 0 0 .462 0 1.032v13.936C0 15.538.462 16 1.032 16h3.465c.876 0 1.354-1.024.79-1.696L1.114 9.327a2.065 2.065 0 0 1 0-2.654l4.175-4.977Z" clip-rule="evenodd"/><path fill="currentColor" d="M0 0h1.548v1.548H0zM0 14.452h1.548V16H0z"/></svg></span></span>
+        </a>
+      </div>
+      <!-- Badge: con operador -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-10" style="background:rgba(240,112,0,0.12); border:1px solid rgba(240,112,0,0.25);">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="#F07000" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span style="font-family:'Oswald',sans-serif; font-size:0.82rem; letter-spacing:0.1em; text-transform:uppercase; color:#F07000;">Toda la maquinaria incluye operador · Cliente provee el diésel</span>
+      </div>
+    </div>
+
+    <!-- Machine grid -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <!-- 1. Mini cargador (Bobcat) -->
+      <div class="machine-card fade-in" style="transition-delay:0.05s;">
+        <div class="relative h-48 overflow-hidden bg-gray-800">
+          <img src="Marca/Bobcat S18 2021 1.jpeg" alt="Mini cargador Bobcat" class="machine-img w-full h-full object-cover object-center" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(20,20,20,0.7) 0%, transparent 55%);"></div>
+          <div class="absolute bottom-3 left-3 px-2.5 py-1 rounded text-xs font-semibold" style="background:rgba(240,112,0,0.92); color:#fff; font-family:'Oswald',sans-serif; letter-spacing:0.07em; text-transform:uppercase;">Disponible</div>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <h3 style="font-family:'Oswald',sans-serif; font-size:1.2rem; font-weight:600; color:#1E1E1E;">Mini Cargador</h3>
+          <p style="font-size:0.83rem; color:#777; margin-top:3px; line-height:1.5;">Ideal para espacios reducidos y movimiento de tierra</p>
+          <div class="flex flex-wrap gap-1.5 mt-3">
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">Bobcat</span>
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">CAT</span>
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">John Deere</span>
+          </div>
+          <div class="mt-auto pt-4 border-t border-gray-100">
+            <a href="https://claude.ai/public/artifacts/f33d2404-8fcc-4a77-98f4-40286f2c4faf" target="_blank" rel="noopener" class="btn-primary w-full justify-center" style="font-size:0.82rem; padding:10px 16px;">
+              Ver precios en cotizador
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Retroexcavadora -->
+      <div class="machine-card fade-in" style="transition-delay:0.1s;">
+        <div class="relative h-48 overflow-hidden bg-gray-800">
+          <img src="Marca/FacebookBackground.png" alt="Retroexcavadora" class="machine-img w-full h-full object-cover" style="object-position:60% 50%;" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(20,20,20,0.7) 0%, transparent 55%);"></div>
+          <div class="absolute bottom-3 left-3 px-2.5 py-1 rounded text-xs font-semibold" style="background:rgba(240,112,0,0.92); color:#fff; font-family:'Oswald',sans-serif; letter-spacing:0.07em; text-transform:uppercase;">Disponible</div>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <h3 style="font-family:'Oswald',sans-serif; font-size:1.2rem; font-weight:600; color:#1E1E1E;">Retroexcavadora</h3>
+          <p style="font-size:0.83rem; color:#777; margin-top:3px; line-height:1.5;">Excavación, zanjas y movimiento de material en obra civil</p>
+          <div class="flex flex-wrap gap-1.5 mt-3">
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">CAT</span>
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">John Deere</span>
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">Komatsu</span>
+          </div>
+          <div class="mt-auto pt-4 border-t border-gray-100">
+            <a href="https://claude.ai/public/artifacts/f33d2404-8fcc-4a77-98f4-40286f2c4faf" target="_blank" rel="noopener" class="btn-primary w-full justify-center" style="font-size:0.82rem; padding:10px 16px;">
+              Ver precios en cotizador
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Manipulador telescópico -->
+      <div class="machine-card fade-in" style="transition-delay:0.15s;">
+        <div class="relative h-48 overflow-hidden bg-gray-800">
+          <img src="Marca/Manipulador Telescopico.jpg" alt="Manipulador Telescópico" class="machine-img w-full h-full object-cover object-center" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(20,20,20,0.7) 0%, transparent 55%);"></div>
+          <div class="absolute bottom-3 left-3 px-2.5 py-1 rounded text-xs font-semibold" style="background:rgba(240,112,0,0.92); color:#fff; font-family:'Oswald',sans-serif; letter-spacing:0.07em; text-transform:uppercase;">Disponible</div>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <h3 style="font-family:'Oswald',sans-serif; font-size:1.2rem; font-weight:600; color:#1E1E1E;">Manipulador Telescópico</h3>
+          <p style="font-size:0.83rem; color:#777; margin-top:3px; line-height:1.5;">Elevación de materiales en altura, ideal para obra vertical</p>
+          <div class="flex flex-wrap gap-1.5 mt-3">
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">Genie</span>
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">JLG</span>
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">Manitou</span>
+          </div>
+          <div class="mt-auto pt-4 border-t border-gray-100">
+            <a href="https://claude.ai/public/artifacts/f33d2404-8fcc-4a77-98f4-40286f2c4faf" target="_blank" rel="noopener" class="btn-primary w-full justify-center" style="font-size:0.82rem; padding:10px 16px;">
+              Ver precios en cotizador
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Compactadora vibrante -->
+      <div class="machine-card fade-in" style="transition-delay:0.05s;">
+        <div class="relative h-48 overflow-hidden bg-gray-800">
+          <img src="Marca/Compactadora Vibrante.jpg" alt="Compactadora Vibrante" class="machine-img w-full h-full object-cover object-center" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(20,20,20,0.7) 0%, transparent 55%);"></div>
+          <div class="absolute bottom-3 left-3 px-2.5 py-1 rounded text-xs font-semibold" style="background:rgba(240,112,0,0.92); color:#fff; font-family:'Oswald',sans-serif; letter-spacing:0.07em; text-transform:uppercase;">Disponible</div>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <h3 style="font-family:'Oswald',sans-serif; font-size:1.2rem; font-weight:600; color:#1E1E1E;">Compactadora Vibrante</h3>
+          <p style="font-size:0.83rem; color:#777; margin-top:3px; line-height:1.5;">Compactación de suelos y bases para cimentaciones y pavimento</p>
+          <div class="flex flex-wrap gap-1.5 mt-3">
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">Wacker</span>
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">Bomag</span>
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">Mikasa</span>
+          </div>
+          <div class="mt-auto pt-4 border-t border-gray-100">
+            <a href="https://claude.ai/public/artifacts/f33d2404-8fcc-4a77-98f4-40286f2c4faf" target="_blank" rel="noopener" class="btn-primary w-full justify-center" style="font-size:0.82rem; padding:10px 16px;">
+              Ver precios en cotizador
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Zanjadora -->
+      <div class="machine-card fade-in" style="transition-delay:0.1s;">
+        <div class="relative h-48 overflow-hidden bg-gray-800">
+          <img src="Marca/Zanjadora Vermeer.jpeg" alt="Zanjadora" class="machine-img w-full h-full object-cover" style="object-position:50% 55%;" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(20,20,20,0.7) 0%, transparent 55%);"></div>
+          <div class="absolute bottom-3 left-3 px-2.5 py-1 rounded text-xs font-semibold" style="background:rgba(240,112,0,0.92); color:#fff; font-family:'Oswald',sans-serif; letter-spacing:0.07em; text-transform:uppercase;">Disponible</div>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <h3 style="font-family:'Oswald',sans-serif; font-size:1.2rem; font-weight:600; color:#1E1E1E;">Zanjadora</h3>
+          <p style="font-size:0.83rem; color:#777; margin-top:3px; line-height:1.5;">Zanjas para tuberías, fibra óptica y redes de servicios</p>
+          <div class="flex flex-wrap gap-1.5 mt-3">
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">Vermeer</span>
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">Ditch Witch</span>
+          </div>
+          <div class="mt-auto pt-4 border-t border-gray-100">
+            <a href="https://claude.ai/public/artifacts/f33d2404-8fcc-4a77-98f4-40286f2c4faf" target="_blank" rel="noopener" class="btn-primary w-full justify-center" style="font-size:0.82rem; padding:10px 16px;">
+              Ver precios en cotizador
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Camión de volteo -->
+      <div class="machine-card fade-in" style="transition-delay:0.15s;">
+        <div class="relative h-48 overflow-hidden bg-gray-800">
+          <img src="Marca/Camion de Volteo.jpg" alt="Camión de Volteo" class="machine-img w-full h-full object-cover object-center" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(20,20,20,0.75) 0%, transparent 50%);"></div>
+          <div class="absolute bottom-3 left-3 px-2.5 py-1 rounded text-xs font-semibold" style="background:rgba(240,112,0,0.92); color:#fff; font-family:'Oswald',sans-serif; letter-spacing:0.07em; text-transform:uppercase;">Disponible</div>
+        </div>
+        <div class="p-5 flex flex-col flex-1">
+          <h3 style="font-family:'Oswald',sans-serif; font-size:1.2rem; font-weight:600; color:#1E1E1E;">Camión de Volteo</h3>
+          <p style="font-size:0.83rem; color:#777; margin-top:3px; line-height:1.5;">Acarreo y disposición de material, tierra, grava y escombro</p>
+          <div class="flex flex-wrap gap-1.5 mt-3">
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">Kenworth</span>
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">International</span>
+            <span style="font-size:0.72rem; font-family:'Oswald',sans-serif; letter-spacing:0.06em; background:#F6F4F0; color:#555; padding:3px 8px; border-radius:3px;">Freightliner</span>
+          </div>
+          <div class="mt-auto pt-4 border-t border-gray-100">
+            <a href="https://claude.ai/public/artifacts/f33d2404-8fcc-4a77-98f4-40286f2c4faf" target="_blank" rel="noopener" class="btn-primary w-full justify-center" style="font-size:0.82rem; padding:10px 16px;">
+              Ver precios en cotizador
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="mt-12 text-center fade-in">
+      <p style="color:rgba(246,244,240,0.45); font-size:0.95rem; margin-bottom:20px;">¿Necesitas varios equipos o una cotización personalizada?</p>
+      <a href="https://claude.ai/public/artifacts/f33d2404-8fcc-4a77-98f4-40286f2c4faf" target="_blank" rel="noopener" class="button06 button06--lg">
+        <span class="button06_bg"></span>
+        <span data-text="Abrir Cotizador Interactivo" class="button06_inner"><span class="button06_text">Abrir Cotizador Interactivo</span></span>
+        <span class="button06_icon" aria-hidden="true"><span class="button06_icon-start"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 16" class="button06_icon-svg"><path fill="currentColor" d="M1.113 9.327a2.065 2.065 0 0 1 0-2.654L6.4.37C6.596.135 6.886 0 7.191 0h.55v16h-.55c-.305 0-.595-.135-.79-.369L1.112 9.327Z"/></svg></span><span class="button06_icon-mid"></span><span class="button06_icon-end"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 16" class="button06_icon-svg"><path fill="currentColor" fill-rule="evenodd" d="M5.288 1.696A1.032 1.032 0 0 0 4.497 0H1.032C.462 0 0 .462 0 1.032v13.936C0 15.538.462 16 1.032 16h3.465c.876 0 1.354-1.024.79-1.696L1.114 9.327a2.065 2.065 0 0 1 0-2.654l4.175-4.977Z" clip-rule="evenodd"/><path fill="currentColor" d="M0 0h1.548v1.548H0zM0 14.452h1.548V16H0z"/></svg></span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ PROYECTOS ══════════════════════════════ -->
+<section id="proyectos" class="py-24 lg:py-32 relative overflow-hidden" style="background: linear-gradient(160deg,#1E1E1E 0%,#2D2D2D 100%);">
+  <!-- BG radial glow -->
+  <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 70% 50% at 80% 30%, rgba(240,112,0,0.08) 0%, transparent 60%);"></div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+    <div class="fade-in">
+      <span class="accent-line"></span>
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16">
+        <div>
+          <h2 class="section-heading section-heading-light">Proyectos Destacados</h2>
+          <p style="font-size:1.05rem; line-height:1.75; color:rgba(246,244,240,0.55); margin-top:12px; max-width:480px;">Proyectos ejecutados en infraestructura crítica para sectores industrial, comercial e institucional.</p>
+        </div>
+        <a href="https://drive.google.com/file/d/1NDd_YAvbO16cRQ3Leq3Ja910OFSB2Gbl/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="btn-outline self-start lg:self-auto">Ver Portafolio Completo</a>
+      </div>
+    </div>
+
+    <!-- Projects grid — clean 3×2 -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <!-- 1. Costco Valle Oriente -->
+      <div class="project-card rounded-lg overflow-hidden card-shadow fade-in" style="transition-delay:0.05s;">
+        <div class="relative h-56 bg-gray-900 overflow-hidden">
+          <img src="Marca/Costco.avif"
+               alt="Costco Valle Oriente" class="project-img w-full h-full object-cover" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(15,15,15,0.82) 0%, rgba(15,15,15,0.18) 55%, transparent 100%);"></div>
+          <div class="absolute inset-0" style="background:linear-gradient(135deg, rgba(240,112,0,0.12) 0%, transparent 60%); mix-blend-mode:multiply;"></div>
+          <div class="absolute top-3 left-3 px-3 py-1 rounded-sm text-xs font-semibold" style="background:rgba(240,112,0,0.92);color:#fff;font-family:'Oswald',sans-serif;letter-spacing:0.08em;text-transform:uppercase;">Comercial</div>
+        </div>
+        <div class="bg-white p-5 flex flex-col gap-2">
+          <h4 style="font-family:'Oswald',sans-serif;font-size:1.22rem;font-weight:700;color:#1E1E1E;line-height:1.2;">Costco Valle Oriente</h4>
+          <p style="font-size:0.86rem;line-height:1.65;color:#555;">Sistema de oxígeno para operación continua en zona de alta demanda comercial.</p>
+          <p style="font-size:0.75rem;color:#F07000;font-family:'Oswald',sans-serif;letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;">Sector Comercial · N.L.</p>
+        </div>
+      </div>
+
+      <!-- 2. Aeropuerto Mariano Escobedo -->
+      <div class="project-card rounded-lg overflow-hidden card-shadow fade-in" style="transition-delay:0.1s;">
+        <div class="relative h-56 bg-gray-900 overflow-hidden">
+          <img src="Marca/aeropuerto-del-norte-de-monterrey.webp"
+               alt="Aeropuerto Internacional Mariano Escobedo" class="project-img w-full h-full object-cover" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(15,15,15,0.82) 0%, rgba(15,15,15,0.18) 55%, transparent 100%);"></div>
+          <div class="absolute inset-0" style="background:linear-gradient(135deg, rgba(240,112,0,0.1) 0%, transparent 60%); mix-blend-mode:multiply;"></div>
+          <div class="absolute top-3 left-3 px-3 py-1 rounded-sm text-xs font-semibold" style="background:rgba(240,112,0,0.92);color:#fff;font-family:'Oswald',sans-serif;letter-spacing:0.08em;text-transform:uppercase;">Institucional</div>
+        </div>
+        <div class="bg-white p-5 flex flex-col gap-2">
+          <h4 style="font-family:'Oswald',sans-serif;font-size:1.22rem;font-weight:700;color:#1E1E1E;line-height:1.2;">Aeropuerto Mariano Escobedo</h4>
+          <p style="font-size:0.86rem;line-height:1.65;color:#555;">Sistema contra incendio en planta de tratamiento bajo normativa aeroportuaria.</p>
+          <p style="font-size:0.75rem;color:#F07000;font-family:'Oswald',sans-serif;letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;">Infraestructura Crítica · N.L.</p>
+        </div>
+      </div>
+
+      <!-- 3. Parque Industrial Johnson Controls -->
+      <div class="project-card rounded-lg overflow-hidden card-shadow fade-in" style="transition-delay:0.15s;">
+        <div class="relative h-56 bg-gray-900 overflow-hidden">
+          <img src="Marca/Johnson-Controls-un-aliado-para-toda-la-vida-1.jpg"
+               alt="Parque Industrial Johnson Controls" class="project-img w-full h-full object-cover" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(15,15,15,0.82) 0%, rgba(15,15,15,0.18) 55%, transparent 100%);"></div>
+          <div class="absolute inset-0" style="background:linear-gradient(135deg, rgba(240,112,0,0.1) 0%, transparent 60%); mix-blend-mode:multiply;"></div>
+          <div class="absolute top-3 left-3 px-3 py-1 rounded-sm text-xs font-semibold" style="background:rgba(25,25,25,0.88);color:#F07000;font-family:'Oswald',sans-serif;letter-spacing:0.08em;text-transform:uppercase;border:1px solid rgba(240,112,0,0.4);">Industrial</div>
+        </div>
+        <div class="bg-white p-5 flex flex-col gap-2">
+          <h4 style="font-family:'Oswald',sans-serif;font-size:1.22rem;font-weight:700;color:#1E1E1E;line-height:1.2;">Parque Industrial Johnson Controls</h4>
+          <p style="font-size:0.86rem;line-height:1.65;color:#555;">Infraestructura de gas en complejo industrial de alto nivel.</p>
+          <p style="font-size:0.75rem;color:#F07000;font-family:'Oswald',sans-serif;letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;">Sector Industrial · N.L.</p>
+        </div>
+      </div>
+
+      <!-- 4. Fashion Drive -->
+      <div class="project-card rounded-lg overflow-hidden card-shadow fade-in" style="transition-delay:0.2s;">
+        <div class="relative h-56 bg-gray-900 overflow-hidden">
+          <img src="Marca/basica-fashiondrive-15.png"
+               alt="Fashion Drive" class="project-img w-full h-full object-cover" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(15,15,15,0.82) 0%, rgba(15,15,15,0.18) 55%, transparent 100%);"></div>
+          <div class="absolute inset-0" style="background:linear-gradient(135deg, rgba(240,112,0,0.12) 0%, transparent 60%); mix-blend-mode:multiply;"></div>
+          <div class="absolute top-3 left-3 px-3 py-1 rounded-sm text-xs font-semibold" style="background:rgba(240,112,0,0.92);color:#fff;font-family:'Oswald',sans-serif;letter-spacing:0.08em;text-transform:uppercase;">Comercial</div>
+        </div>
+        <div class="bg-white p-5 flex flex-col gap-2">
+          <h4 style="font-family:'Oswald',sans-serif;font-size:1.22rem;font-weight:700;color:#1E1E1E;line-height:1.2;">Fashion Drive</h4>
+          <p style="font-size:0.86rem;line-height:1.65;color:#555;">Corrección de fuga de gas en plaza comercial de alto flujo.</p>
+          <p style="font-size:0.75rem;color:#F07000;font-family:'Oswald',sans-serif;letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;">Plaza Comercial · N.L.</p>
+        </div>
+      </div>
+
+      <!-- 5. WTC San Luis Potosí -->
+      <div class="project-card rounded-lg overflow-hidden card-shadow fade-in" style="transition-delay:0.25s;">
+        <div class="relative h-56 bg-gray-900 overflow-hidden">
+          <img src="Marca/gestion-de-clima-industrial-2.jpg"
+               alt="WTC San Luis Potosí" class="project-img w-full h-full object-cover" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(15,15,15,0.82) 0%, rgba(15,15,15,0.18) 55%, transparent 100%);"></div>
+          <div class="absolute inset-0" style="background:linear-gradient(135deg, rgba(240,112,0,0.1) 0%, transparent 60%); mix-blend-mode:multiply;"></div>
+          <div class="absolute top-3 left-3 px-3 py-1 rounded-sm text-xs font-semibold" style="background:rgba(240,112,0,0.92);color:#fff;font-family:'Oswald',sans-serif;letter-spacing:0.08em;text-transform:uppercase;">Corporativo</div>
+        </div>
+        <div class="bg-white p-5 flex flex-col gap-2">
+          <h4 style="font-family:'Oswald',sans-serif;font-size:1.22rem;font-weight:700;color:#1E1E1E;line-height:1.2;">WTC San Luis Potosí</h4>
+          <p style="font-size:0.86rem;line-height:1.65;color:#555;">Instalación de sistema de gas en complejo corporativo de escala internacional.</p>
+          <p style="font-size:0.75rem;color:#F07000;font-family:'Oswald',sans-serif;letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;">Complejo Corporativo · S.L.P.</p>
+        </div>
+      </div>
+
+      <!-- 6. CTA card — Ver portafolio completo -->
+      <div class="fade-in rounded-lg overflow-hidden card-shadow" style="transition-delay:0.3s; background:linear-gradient(135deg,#1E1E1E 0%,#2D2D2D 100%); border:1px solid rgba(240,112,0,0.2); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:40px 32px; text-align:center; min-height:268px;">
+        <div style="width:48px;height:48px;border-radius:50%;background:rgba(240,112,0,0.12);border:1px solid rgba(240,112,0,0.3);display:flex;align-items:center;justify-content:center;">
+          <svg xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;color:#F07000;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0l-7-7m7 7l-7 7"/></svg>
+        </div>
+        <div>
+          <div style="font-family:'Oswald',sans-serif;font-size:1.15rem;font-weight:700;color:#F6F4F0;letter-spacing:-0.01em;line-height:1.2;">+200 Proyectos<br/>Entregados</div>
+          <div style="font-size:0.84rem;color:rgba(246,244,240,0.45);margin-top:8px;line-height:1.6;">Más de 35 años construyendo infraestructura crítica en México.</div>
+        </div>
+        <a href="https://drive.google.com/file/d/1NDd_YAvbO16cRQ3Leq3Ja910OFSB2Gbl/view?usp=drive_link" target="_blank" rel="noopener noreferrer"
+           style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#F07000,#FF9520);color:#fff;font-family:'Oswald',sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:11px 24px;border-radius:4px;text-decoration:none;box-shadow:0 4px 16px rgba(240,112,0,0.35);transition:transform 0.2s cubic-bezier(.34,1.56,.64,1),box-shadow 0.2s;"
+           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(240,112,0,0.45)'"
+           onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(240,112,0,0.35)'">
+          Ver Portafolio
+          <svg xmlns="http://www.w3.org/2000/svg" style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ CLIENTES ══════════════════════════════ -->
+<section id="clientes" style="background:#111111; border-top:1px solid rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.05); padding:48px 0;">
+
+  <div style="text-align:center; margin-bottom:32px;">
+    <p style="font-family:'Inter',sans-serif; font-size:0.75rem; letter-spacing:0.16em; text-transform:uppercase; color:rgba(246,244,240,0.28);">Empresas que confían en nosotros</p>
+  </div>
+
+  <!-- Slider wrapper -->
+  <div style="position:relative; overflow:hidden; height:80px;">
+
+    <!-- Scrolling track (duplicated for seamless loop) -->
+    <div class="logo-track" style="display:flex; align-items:center; width:max-content; gap:72px; animation:logoMarquee 38s linear infinite;">
+
+      <!-- Set 1 -->
+      <a href="https://www.naturgy.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClienteNaturgy.png"     alt="Naturgy"      class="logo-item" style="height:34px;" /></a>
+      <a href="https://www.eventelecom.com.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClientesEven.webp"       alt="Even Telecom" class="logo-item" style="height:42px;" /></a>
+      <a href="https://www.grupogp.com.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClienteGP.png"           alt="Grupo GP"     class="logo-item" style="height:62px;" /></a>
+      <a href="https://www.javer.com.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClienteJAVER.png"        alt="JAVER"        class="logo-item" style="height:30px;" /></a>
+      <a href="https://www.grupokrone.com" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClientesKrone.webp"      alt="Grupo Krone"  class="logo-item" style="height:42px;" /></a>
+      <a href="https://www.carza.com" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClientesCarza.webp"      alt="Carza"        class="logo-item" style="height:46px;" /></a>
+      <a href="https://www.hogarfuturo.com.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClientesHogarFuturo.png" alt="Hogar Futuro" class="logo-item" style="height:40px;" /></a>
+      <a href="https://www.alora.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClientesAlora.png"       alt="Alora"        class="logo-item" style="height:50px;" /></a>
+
+      <!-- Set 2 (duplicate for seamless loop) -->
+      <a href="https://www.naturgy.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClienteNaturgy.png"     alt="Naturgy"      class="logo-item" style="height:34px;" /></a>
+      <a href="https://www.eventelecom.com.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClientesEven.webp"       alt="Even Telecom" class="logo-item" style="height:42px;" /></a>
+      <a href="https://www.grupogp.com.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClienteGP.png"           alt="Grupo GP"     class="logo-item" style="height:62px;" /></a>
+      <a href="https://www.javer.com.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClienteJAVER.png"        alt="JAVER"        class="logo-item" style="height:30px;" /></a>
+      <a href="https://www.grupokrone.com" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClientesKrone.webp"      alt="Grupo Krone"  class="logo-item" style="height:42px;" /></a>
+      <a href="https://www.carza.com" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClientesCarza.webp"      alt="Carza"        class="logo-item" style="height:46px;" /></a>
+      <a href="https://www.hogarfuturo.com.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClientesHogarFuturo.png" alt="Hogar Futuro" class="logo-item" style="height:40px;" /></a>
+      <a href="https://www.alora.mx" target="_blank" rel="noopener" class="logo-link"><img src="Marca/ClientesAlora.png"       alt="Alora"        class="logo-item" style="height:50px;" /></a>
+
+    </div>
+
+    <!-- Progressive blur — left edge -->
+    <div class="logo-blur-left"  style="position:absolute;top:0;left:0; width:220px;height:100%;pointer-events:none;z-index:10;"></div>
+    <!-- Progressive blur — right edge -->
+    <div class="logo-blur-right" style="position:absolute;top:0;right:0;width:220px;height:100%;pointer-events:none;z-index:10;"></div>
+
+  </div>
+</section>
+
+<style>
+/* ── Logo marquee animation ── */
+@keyframes logoMarquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.logo-track:hover { animation-play-state: paused; }
+.logo-link { display:flex; align-items:center; flex-shrink:0; }
+
+/* ── Logo images ── */
+.logo-item {
+  flex-shrink: 0;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.45;
+  transition: opacity 0.25s cubic-bezier(.4,0,.2,1);
+}
+.logo-item:hover { opacity: 0.85; }
+
+/* ── Progressive blur overlays (layers of backdrop-filter + mask) ── */
+.logo-blur-left,
+.logo-blur-right {
+  display: flex;
+}
+/* Layer the blur in 6 slices using multiple pseudo-approach via inline children */
+.logo-blur-left  { background: linear-gradient(to right,  #111111 0%, #111111 15%, rgba(17,17,17,0.85) 40%, rgba(17,17,17,0.5) 65%, rgba(17,17,17,0.15) 85%, transparent 100%); }
+.logo-blur-right { background: linear-gradient(to left,   #111111 0%, #111111 15%, rgba(17,17,17,0.85) 40%, rgba(17,17,17,0.5) 65%, rgba(17,17,17,0.15) 85%, transparent 100%); }
+</style>
+
+<!-- ══════════════════════════════ NOSOTROS ══════════════════════════════ -->
+<section id="nosotros" class="py-24 lg:py-32 bg-brand-cream overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+      <!-- Left: image stack -->
+      <div class="relative fade-in">
+        <div class="relative rounded-lg overflow-hidden" style="box-shadow: 0 4px 16px rgba(0,0,0,0.1), 0 24px 64px rgba(0,0,0,0.12);">
+          <img src="Marca/Quienes somos.jpg" alt="Equipo G&A en obra" class="w-full h-auto object-cover" style="min-height:360px; object-position: center 35%;" />
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(240,112,0,0.25) 0%, transparent 50%); mix-blend-mode:multiply;"></div>
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(30,30,30,0.6) 0%, transparent 50%);"></div>
+        </div>
+        <!-- Floating stat badge -->
+        <div class="value-badge absolute -bottom-6 -right-4 bg-brand-orange text-white rounded-lg p-5 shadow-xl" style="box-shadow: 0 8px 32px rgba(240,112,0,0.4);">
+          <div style="font-family:'Oswald',sans-serif; font-size:2.2rem; font-weight:700; line-height:1;">+200</div>
+          <div style="font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; opacity:0.85; margin-top:2px;">Proyectos<br/>Entregados</div>
+        </div>
+      </div>
+
+      <!-- Right: content -->
+      <div class="fade-in" style="transition-delay:0.15s;">
+        <span class="accent-line"></span>
+        <h2 class="section-heading">Quiénes Somos</h2>
+        <p style="font-size:1.05rem; line-height:1.75; color:#555; margin-top:16px;">
+          <strong style="color:#1E1E1E;">G&amp;A Construcción, Ingeniería y Servicios Industriales S.A. de C.V.</strong> es una empresa fundada en 1986, con más de 35 años de experiencia en el mercado mexicano. Nacimos con la convicción de que cada proyecto merece los más altos estándares de calidad, seguridad y cumplimiento.
+        </p>
+        <p style="font-size:1rem; line-height:1.75; color:#666; margin-top:16px;">
+          Contamos con un equipo multidisciplinario de ingenieros, arquitectos y especialistas que garantizan la ejecución impecable de cada obra, desde la conceptualización hasta la entrega.
+        </p>
+
+        <!-- Values -->
+        <div class="grid grid-cols-2 gap-4 mt-10">
+          <div class="value-badge bg-white rounded-lg p-5 card-shadow">
+            <div style="color:#F07000; margin-bottom:8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+            </div>
+            <div style="font-family:'Oswald',sans-serif; font-size:1rem; font-weight:600; color:#1E1E1E;">Calidad</div>
+            <div style="font-size:0.82rem; color:#777; margin-top:4px; line-height:1.5;">Materiales y procesos certificados.</div>
+          </div>
+          <div class="value-badge bg-white rounded-lg p-5 card-shadow">
+            <div style="color:#F07000; margin-bottom:8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div style="font-family:'Oswald',sans-serif; font-size:1rem; font-weight:600; color:#1E1E1E;">Puntualidad</div>
+            <div style="font-size:0.82rem; color:#777; margin-top:4px; line-height:1.5;">Entregas en tiempo y forma.</div>
+          </div>
+          <div class="value-badge bg-white rounded-lg p-5 card-shadow">
+            <div style="color:#F07000; margin-bottom:8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <div style="font-family:'Oswald',sans-serif; font-size:1rem; font-weight:600; color:#1E1E1E;">Equipo</div>
+            <div style="font-size:0.82rem; color:#777; margin-top:4px; line-height:1.5;">+50 especialistas certificados.</div>
+          </div>
+          <div class="value-badge bg-white rounded-lg p-5 card-shadow">
+            <div style="color:#F07000; margin-bottom:8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div style="font-family:'Oswald',sans-serif; font-size:1rem; font-weight:600; color:#1E1E1E;">Sustentabilidad</div>
+            <div style="font-size:0.82rem; color:#777; margin-top:4px; line-height:1.5;">Prácticas responsables con el ambiente.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ CTA BAND ══════════════════════════════ -->
+<div class="py-16 relative overflow-hidden" style="background:linear-gradient(135deg,#F07000 0%,#FF9520 100%);">
+  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 60% 80% at 90% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);"></div>
+  <div class="absolute inset-0" style="background-image:url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E\"); pointer-events:none;"></div>
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+    <div>
+      <h3 style="font-family:'Oswald',sans-serif; font-size:clamp(1.6rem,3vw,2.2rem); font-weight:700; color:#fff; letter-spacing:-0.02em;">¿Tienes un proyecto en mente?</h3>
+      <p style="font-size:1rem; color:rgba(255,255,255,0.8); margin-top:6px;">Cuéntanos tu idea y te damos una cotización sin costo.</p>
+    </div>
+    <a href="#contacto" style="background:#1E1E1E; color:#F6F4F0; font-family:'Oswald',sans-serif; font-size:1rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; padding:14px 32px; border-radius:4px; display:inline-flex; align-items:center; gap:10px; text-decoration:none; box-shadow:0 4px 20px rgba(0,0,0,0.3); transition:transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s; white-space:nowrap;"
+       onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.4)'"
+       onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.3)'">
+      Solicitar Cotización
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ CONTACTO ══════════════════════════════ -->
+<section id="contacto" class="py-24 lg:py-32 relative overflow-hidden" style="background:linear-gradient(160deg,#1E1E1E 0%,#272727 100%);">
+  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 50% 60% at 10% 60%, rgba(240,112,0,0.07) 0%, transparent 60%);"></div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+
+      <!-- Left: info -->
+      <div class="fade-in">
+        <span class="accent-line"></span>
+        <h2 class="section-heading section-heading-light">Hablemos de tu<br/>Proyecto</h2>
+        <p style="font-size:1.05rem; line-height:1.75; color:rgba(246,244,240,0.55); margin-top:16px; max-width:440px;">
+          Nuestro equipo está listo para escuchar tu idea y ofrecerte la mejor solución constructiva. Contáctanos sin compromiso.
+        </p>
+
+        <!-- Contact info -->
+        <div class="flex flex-col gap-5 mt-10">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center" style="background:rgba(240,112,0,0.15);">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#F07000" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
+            <div>
+              <div style="font-family:'Oswald',sans-serif; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; color:#F07000; margin-bottom:4px;">Dirección</div>
+              <a href="https://maps.google.com/?q=Río+de+la+Plata+103-1B,+Col.+Del+Valle,+San+Pedro+Garza+García,+Nuevo+León,+México" target="_blank" rel="noopener" style="color:rgba(246,244,240,0.75); font-size:0.95rem; line-height:1.6; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#FF9520'" onmouseout="this.style.color='rgba(246,244,240,0.75)'">Río de la Plata #103-1B<br/>Col. Del Valle, San Pedro Garza García, México</a>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center" style="background:rgba(240,112,0,0.15);">
+              <!-- WhatsApp icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#F07000"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </div>
+            <div>
+              <div style="font-family:'Oswald',sans-serif; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; color:#F07000; margin-bottom:4px;">WhatsApp · Teléfono</div>
+              <a href="https://wa.me/528115794617" target="_blank" rel="noopener" style="color:rgba(246,244,240,0.85); font-size:0.95rem; text-decoration:none; display:flex; align-items:center; gap:6px; transition:color 0.2s;" onmouseover="this.style.color='#FF9520'" onmouseout="this.style.color='rgba(246,244,240,0.85)'">
+                81 1579 4617
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+              <a href="https://wa.me/528110433575" target="_blank" rel="noopener" style="color:rgba(246,244,240,0.65); font-size:0.88rem; text-decoration:none; margin-top:6px; display:flex; align-items:center; gap:5px; transition:color 0.2s;" onmouseover="this.style.color='rgba(246,244,240,0.9)'" onmouseout="this.style.color='rgba(246,244,240,0.65)'">
+                81 1043 3575
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center" style="background:rgba(240,112,0,0.15);">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#F07000" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <div>
+              <div style="font-family:'Oswald',sans-serif; font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; color:#F07000; margin-bottom:4px;">Correo</div>
+              <a href="mailto:contacto@gacoisisa.com" style="color:rgba(246,244,240,0.75); font-size:0.95rem; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#FF9520'" onmouseout="this.style.color='rgba(246,244,240,0.75)'">contacto@gacoisisa.com</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: form -->
+      <div class="fade-in" style="transition-delay:0.15s;">
+        <form id="contact-form" class="flex flex-col gap-5" onsubmit="sendToWhatsApp(event);">
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div>
+              <label style="display:block; font-family:'Oswald',sans-serif; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(246,244,240,0.5); margin-bottom:8px;">Nombre</label>
+              <input id="cf-nombre" type="text" placeholder="Juan García" class="form-input" />
+            </div>
+            <div>
+              <label style="display:block; font-family:'Oswald',sans-serif; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(246,244,240,0.5); margin-bottom:8px;">Empresa</label>
+              <input id="cf-empresa" type="text" placeholder="Tu empresa" class="form-input" />
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div>
+              <label style="display:block; font-family:'Oswald',sans-serif; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(246,244,240,0.5); margin-bottom:8px;">Correo</label>
+              <input id="cf-correo" type="email" placeholder="correo@empresa.com" class="form-input" />
+            </div>
+            <div>
+              <label style="display:block; font-family:'Oswald',sans-serif; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(246,244,240,0.5); margin-bottom:8px;">Teléfono</label>
+              <input id="cf-telefono" type="tel" placeholder="+52 81 0000 0000" class="form-input" />
+            </div>
+          </div>
+          <div>
+            <label style="display:block; font-family:'Oswald',sans-serif; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(246,244,240,0.5); margin-bottom:8px;">Tipo de Proyecto</label>
+            <select id="cf-tipo" class="form-input" style="cursor:pointer;">
+              <option value="" style="background:#2D2D2D;">Selecciona una opción</option>
+              <option style="background:#2D2D2D;">Gas Natural</option>
+              <option style="background:#2D2D2D;">Agua y Drenaje</option>
+              <option style="background:#2D2D2D;">Infraestructura para Urbanización</option>
+              <option style="background:#2D2D2D;">Mantenimiento Industrial</option>
+              <option style="background:#2D2D2D;">Otro</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block; font-family:'Oswald',sans-serif; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(246,244,240,0.5); margin-bottom:8px;">Mensaje</label>
+            <textarea id="cf-mensaje" placeholder="Cuéntanos sobre tu proyecto..." rows="4" class="form-input" style="resize:vertical;"></textarea>
+          </div>
+          <button type="submit" class="button06 mt-2" style="width:100%;">
+            <span class="button06_bg"></span>
+            <span data-text="Enviar por WhatsApp" class="button06_inner" style="width:100%; justify-content:center; text-align:center;"><span class="button06_text">Enviar por WhatsApp</span></span>
+            <span class="button06_icon" aria-hidden="true"><span class="button06_icon-start"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 16" class="button06_icon-svg"><path fill="currentColor" d="M1.113 9.327a2.065 2.065 0 0 1 0-2.654L6.4.37C6.596.135 6.886 0 7.191 0h.55v16h-.55c-.305 0-.595-.135-.79-.369L1.112 9.327Z"/></svg></span><span class="button06_icon-mid"></span><span class="button06_icon-end"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 16" class="button06_icon-svg"><path fill="currentColor" fill-rule="evenodd" d="M5.288 1.696A1.032 1.032 0 0 0 4.497 0H1.032C.462 0 0 .462 0 1.032v13.936C0 15.538.462 16 1.032 16h3.465c.876 0 1.354-1.024.79-1.696L1.114 9.327a2.065 2.065 0 0 1 0-2.654l4.175-4.977Z" clip-rule="evenodd"/><path fill="currentColor" d="M0 0h1.548v1.548H0zM0 14.452h1.548V16H0z"/></svg></span></span>
+          </button>
+        </form>
+
+        <script>
+        function sendToWhatsApp(e) {
+          e.preventDefault();
+          var nombre  = document.getElementById('cf-nombre').value.trim();
+          var empresa = document.getElementById('cf-empresa').value.trim();
+          var correo  = document.getElementById('cf-correo').value.trim();
+          var tel     = document.getElementById('cf-telefono').value.trim();
+          var tipo    = document.getElementById('cf-tipo').value.trim();
+          var mensaje = document.getElementById('cf-mensaje').value.trim();
+
+          var lines = ['Hola, me contacto desde el sitio web de G&A Coisisa.', ''];
+          if (nombre)  lines.push('*Nombre:* ' + nombre);
+          if (empresa) lines.push('*Empresa:* ' + empresa);
+          if (correo)  lines.push('*Correo:* ' + correo);
+          if (tel)     lines.push('*Teléfono:* ' + tel);
+          if (tipo)    lines.push('*Tipo de proyecto:* ' + tipo);
+          if (mensaje) lines.push('', '*Mensaje:*', mensaje);
+
+          var text = encodeURIComponent(lines.join('\n'));
+          window.open('https://wa.me/528115794617?text=' + text, '_blank');
+        }
+        </script>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
+<!-- ══════════════════════════════ BACKGROUND PATHS BRAND CLOSE ══════════════════════════════ -->
+<section id="cierre" style="position:relative;overflow:hidden;background:#0A0A0A;min-height:380px;display:flex;align-items:center;justify-content:center;">
+
+  <!-- Animated paths layer 1 (position +1) -->
+  <svg id="bp-svg-pos1" viewBox="0 0 696 316" fill="none" preserveAspectRatio="xMidYMid slice"
+       style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></svg>
+
+  <!-- Animated paths layer 2 (position -1, mirrored fan) -->
+  <svg id="bp-svg-neg1" viewBox="0 0 696 316" fill="none" preserveAspectRatio="xMidYMid slice"
+       style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></svg>
+
+  <!-- Orange brand radial glow -->
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 55% 70% at 50% 50%,rgba(240,112,0,0.07) 0%,transparent 70%);pointer-events:none;"></div>
+
+  <!-- Center content -->
+  <div style="position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:72px 24px;text-align:center;">
+    <img src="Marca/G&A Logo.png" alt="G&A Coisisa" class="bp-logo"
+         style="height:148px;width:auto;object-fit:contain;margin-bottom:18px;filter:drop-shadow(0 0 32px rgba(240,112,0,0.22)) drop-shadow(0 2px 12px rgba(0,0,0,0.5));" />
+    <p style="font-family:'Oswald',sans-serif;font-size:0.82rem;letter-spacing:0.28em;text-transform:uppercase;color:rgba(246,244,240,0.3);margin:0;line-height:1;">Calidad &nbsp;·&nbsp; Compromiso &nbsp;·&nbsp; Confianza</p>
+  </div>
+</section>
+
+<style>
+/* ── Background paths flow animation ── */
+@keyframes bp-flow {
+  from { stroke-dashoffset: 3200; }
+  to   { stroke-dashoffset: -3200; }
+}
+@keyframes bp-logo-in {
+  from { opacity:0; transform:scale(0.88) translateY(20px); }
+  to   { opacity:1; transform:scale(1)    translateY(0);    }
+}
+.bp-logo { animation: bp-logo-in 1.4s cubic-bezier(0.22,1,0.36,1) 0.2s both; }
+</style>
+
+<script>
+(function () {
+  /* Pre-compute paths for position=+1 and position=-1 */
+  function buildPath(i, pos) {
+    var a = 380 - i * 5 * pos;
+    var b = 189 + i * 6;
+    var c = 312 - i * 5 * pos;
+    var d = 216 - i * 6;
+    var e = 152 - i * 5 * pos;
+    var f = 343 - i * 6;
+    var g = 616 - i * 5 * pos;
+    var h = 470 - i * 6;
+    var k = 684 - i * 5 * pos;
+    var m = 875 - i * 6;
+    return 'M-' + a + ' -' + b +
+           'C-' + a + ' -' + b + ' -' + c + ' ' + d + ' ' + e + ' ' + f +
+           'C' + g + ' ' + h + ' ' + k + ' ' + m + ' ' + k + ' ' + m;
+  }
+
+  var NS = 'http://www.w3.org/2000/svg';
+
+  [['bp-svg-pos1', 1], ['bp-svg-neg1', -1]].forEach(function (pair) {
+    var svg = document.getElementById(pair[0]);
+    var pos = pair[1];
+    if (!svg) return;
+
+    for (var i = 0; i < 36; i++) {
+      var path = document.createElementNS(NS, 'path');
+      path.setAttribute('d', buildPath(i, pos));
+      path.setAttribute('fill', 'none');
+
+      /* Very subtle strokes — barely perceptible */
+      var op = (0.015 + i * 0.003).toFixed(3);
+      path.setAttribute('stroke', 'rgba(246,244,240,' + op + ')');
+      path.setAttribute('stroke-width', (0.4 + i * 0.02).toFixed(2));
+
+      /* Short dash so only a sliver moves at a time */
+      path.style.strokeDasharray  = '300 3200';
+      path.style.strokeDashoffset = '3200';
+
+      var dur   = (55 + Math.random() * 35).toFixed(1);
+      var delay = (Math.random() * -60).toFixed(1);
+      path.style.animation = 'bp-flow ' + dur + 's ' + delay + 's linear infinite';
+
+      svg.appendChild(path);
+    }
+  });
+}());
+</script>
+
+<footer style="background:#141414; border-top:1px solid rgba(255,255,255,0.06);">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+    <div style="display:flex; justify-content:center; gap:200px; flex-wrap:wrap; margin-bottom:40px;">
+      <div style="min-width:220px;">
+        <div style="font-family:'Oswald',sans-serif; font-size:0.8rem; letter-spacing:0.12em; text-transform:uppercase; color:#F07000; margin-bottom:12px;">Servicios</div>
+
+        <!-- Accordion -->
+        <div id="footer-accordion" style="display:flex; flex-direction:column;">
+
+          <!-- Item 1: Gas Natural -->
+          <div class="fac-item" style="border-bottom:1px solid rgba(246,244,240,0.06);">
+            <button class="fac-trigger" aria-expanded="false">
+              <span>Gas Natural</span>
+              <svg class="fac-chevron" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="fac-body">
+              <ul class="fac-list">
+                <li>Construcción de redes de acero</li>
+                <li>Construcción de redes de polietileno</li>
+                <li>Renovación de red</li>
+                <li>Instalación de acometidas</li>
+                <li>Instalación de casetas de regulación</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Item 2: Agua y Drenaje -->
+          <div class="fac-item" style="border-bottom:1px solid rgba(246,244,240,0.06);">
+            <button class="fac-trigger" aria-expanded="false">
+              <span>Agua y Drenaje</span>
+              <svg class="fac-chevron" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="fac-body">
+              <ul class="fac-list">
+                <li>Instalación de red de agua potable</li>
+                <li>Instalación de drenaje pluvial</li>
+                <li>Instalación de red de drenaje sanitario</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Item 3: Infraestructura para Urbanización -->
+          <div class="fac-item" style="border-bottom:1px solid rgba(246,244,240,0.06);">
+            <button class="fac-trigger" aria-expanded="false">
+              <span>Infraestructura para Urbanización</span>
+              <svg class="fac-chevron" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="fac-body">
+              <ul class="fac-list">
+                <li>Construcción de casas</li>
+                <li>Bardas perimetrales</li>
+                <li>Construcción de banquetas</li>
+                <li>Repavimentación</li>
+                <li>Construcción general</li>
+                <li>Alumbrado público</li>
+                <li>Muros de contención y escarpeados</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Item 4: Mantenimiento Industrial -->
+          <div class="fac-item">
+            <button class="fac-trigger" aria-expanded="false">
+              <span>Mantenimiento Industrial</span>
+              <svg class="fac-chevron" xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="fac-body">
+              <ul class="fac-list">
+                <li>Instalación de fibra óptica</li>
+                <li>Tensado de líneas aéreas</li>
+                <li>Sistemas de agua</li>
+                <li>Sistemas de drenaje</li>
+                <li>Sistema contra incendio</li>
+                <li>Luminarias y postes</li>
+                <li>Armado de naves industriales</li>
+                <li>Red eléctrica</li>
+                <li>Subestaciones eléctricas</li>
+                <li>Pisos pulidos industriales</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'Oswald',sans-serif; font-size:0.8rem; letter-spacing:0.12em; text-transform:uppercase; color:#F07000; margin-bottom:16px;">Contacto</div>
+        <address style="font-style:normal; font-size:0.88rem; color:rgba(246,244,240,0.45); line-height:1.8;">
+          <a href="https://maps.google.com/?q=Río+de+la+Plata+103-1B,+Col.+Del+Valle,+San+Pedro+Garza+García,+Nuevo+León,+México" target="_blank" rel="noopener" style="color:rgba(246,244,240,0.45); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#F07000'" onmouseout="this.style.color='rgba(246,244,240,0.45)'">Río de la Plata #103-1B, Col. Del Valle<br />
+          San Pedro Garza García, México</a><br />
+          <a href="https://wa.me/528110433575" target="_blank" rel="noopener" style="color:rgba(246,244,240,0.45); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#F07000'" onmouseout="this.style.color='rgba(246,244,240,0.45)'">81 1043 3575</a> · <a href="https://wa.me/528115794617" target="_blank" rel="noopener" style="color:rgba(246,244,240,0.45); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#F07000'" onmouseout="this.style.color='rgba(246,244,240,0.45)'">81 1579 4617</a><br />
+          <a href="mailto:contacto@gacoisisa.com" style="color:rgba(246,244,240,0.45); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#F07000'" onmouseout="this.style.color='rgba(246,244,240,0.45)'">contacto@gacoisisa.com</a>
+        </address>
+      </div>
+    </div>
+    <div class="border-t border-white/[0.06] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <p style="font-size:0.8rem; color:rgba(246,244,240,0.25);">© 2024 G&amp;A Construcción, Ingeniería y Servicios Industriales S.A. de C.V.</p>
+        <p style="font-size:0.72rem; color:rgba(246,244,240,0.15); margin-top:3px;">Todos los derechos reservados.</p>
+      </div>
+      <p style="font-size:0.8rem; color:rgba(246,244,240,0.25);">Calidad · Compromiso · Confianza</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+/* ── Footer accordion ── */
+.fac-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(246,244,240,0.72);
+  text-align: left;
+  transition: color 0.2s cubic-bezier(.4,0,.2,1);
+}
+.fac-trigger:hover { color: #fff; }
+.fac-trigger[aria-expanded="true"] { color: #F07000; }
+.fac-trigger:focus-visible { outline: 2px solid #F07000; outline-offset: 2px; border-radius: 2px; }
+
+.fac-chevron {
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(.34,1.1,.64,1), color 0.2s;
+  color: rgba(246,244,240,0.3);
+}
+.fac-trigger[aria-expanded="true"] .fac-chevron {
+  transform: rotate(180deg);
+  color: #F07000;
+}
+
+/* max-height approach — reliable cross-browser, no grid overflow conflict */
+.fac-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(.4,0,.2,1);
+}
+.fac-body.open { max-height: 400px; }
+
+.fac-list {
+  list-style: none;
+  padding: 2px 0 12px 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.fac-list li {
+  font-size: 0.8rem;
+  color: rgba(246,244,240,0.42);
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.5;
+  transition: color 0.15s;
+}
+.fac-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 1.5px;
+  background: #F07000;
+  border-radius: 1px;
+  opacity: 0.55;
+}
+.fac-list li:hover { color: rgba(246,244,240,0.75); }
+</style>
+
+<script>
+/* Footer accordion — single-open, event-delegated */
+(function () {
+  const root = document.getElementById('footer-accordion');
+  if (!root) return;
+  let openBtn = null; // track currently open trigger
+
+  root.addEventListener('click', e => {
+    const btn = e.target.closest('.fac-trigger');
+    if (!btn) return;
+
+    const body = btn.nextElementSibling;
+    const isOpen = btn === openBtn;
+
+    // Close current
+    if (openBtn) {
+      openBtn.setAttribute('aria-expanded', 'false');
+      openBtn.nextElementSibling.classList.remove('open');
+    }
+
+    // Open clicked (unless it was already open)
+    if (!isOpen) {
+      btn.setAttribute('aria-expanded', 'true');
+      body.classList.add('open');
+      openBtn = btn;
+    } else {
+      openBtn = null;
+    }
+  });
+})();
+</script>
+
+<script>
+  // Nav scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  // Mobile menu toggle
+  const toggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const bar1 = document.getElementById('bar1');
+  const bar2 = document.getElementById('bar2');
+  const bar3 = document.getElementById('bar3');
+  let open = false;
+  toggle.addEventListener('click', () => {
+    open = !open;
+    mobileMenu.classList.toggle('hidden', !open);
+    bar1.style.transform = open ? 'translateY(8px) rotate(45deg)' : '';
+    bar2.style.opacity   = open ? '0' : '1';
+    bar3.style.transform = open ? 'translateY(-8px) rotate(-45deg)' : '';
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    open = false; mobileMenu.classList.add('hidden');
+    bar1.style.transform = bar3.style.transform = '';
+    bar2.style.opacity = '1';
+  }));
+
+  // ── Elementor-style counter animation ──
+  function animateCounter(el) {
+    var target = +el.getAttribute('data-target');
+    var duration = 1800;
+    var start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      // easeOutExpo
+      var eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      el.textContent = Math.round(eased * target);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  // Trigger after hero entrance animation finishes
+  setTimeout(function() {
+    document.querySelectorAll('.e-counter-number[data-target]').forEach(animateCounter);
+  }, 1400);
+
+  // Scroll-triggered fade-in
+  const fadeEls = document.querySelectorAll('.fade-in');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  fadeEls.forEach(el => observer.observe(el));
+  // Safety net — long delay so scroll-stagger has time to work naturally
+  setTimeout(() => fadeEls.forEach(el => el.classList.add('visible')), 12000);
+</script>
+
+<script>
+// Subtle mouse-parallax on project card images
+(function () {
+  const cards = document.querySelectorAll('#proyectos .project-card');
+  const STRENGTH = 8; // max px shift
+
+  cards.forEach(card => {
+    const img = card.querySelector('.project-img');
+    if (!img) return;
+
+    // Ensure the image has room to move without revealing edges
+    img.style.willChange = 'transform';
+
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) / (rect.width / 2);   // -1 → 1
+      const dy = (e.clientY - cy) / (rect.height / 2);  // -1 → 1
+      img.style.transform = `scale(1.08) translate(${dx * -STRENGTH}px, ${dy * -STRENGTH}px)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      img.style.transform = 'scale(1) translate(0,0)';
+    });
+  });
+
+  // Also apply a gentle global parallax to the section background glow
+  const section = document.getElementById('proyectos');
+  const glow = section && section.querySelector('[style*="radial-gradient"]');
+  if (section && glow) {
+    document.addEventListener('mousemove', e => {
+      const rx = (e.clientX / window.innerWidth - 0.5) * 30;
+      const ry = (e.clientY / window.innerHeight - 0.5) * 20;
+      glow.style.transform = `translate(${rx}px, ${ry}px)`;
+    }, { passive: true });
+  }
+})();
+</script>
+
+<!-- ═══════════════════ SCROLL ANIMATIONS ═══════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── 1. Scroll progress bar ── */
+  var bar = document.createElement('div');
+  bar.setAttribute('aria-hidden', 'true');
+  bar.style.cssText = 'position:fixed;top:0;left:0;right:0;height:3px;z-index:9999;pointer-events:none;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,#C55A00,#F07000 50%,#FF9520);box-shadow:0 0 12px rgba(240,112,0,0.75),0 0 4px rgba(240,112,0,0.95);';
+  document.body.insertBefore(bar, document.body.firstChild);
+
+  /* ── 2. Hero parallax setup ── */
+  var heroSection = document.getElementById('inicio');
+  var heroImg = heroSection && heroSection.querySelector('.absolute.z-0 img');
+  if (heroImg) {
+    heroImg.style.height = 'calc(100% + 200px)';
+    heroImg.style.top = '-100px';
+    heroImg.style.position = 'absolute';
+    heroImg.style.width = '100%';
+    heroImg.style.objectFit = 'cover';
+    heroImg.style.objectPosition = 'center';
+    heroImg.style.willChange = 'transform';
+  }
+
+  /* ── 3. rAF-throttled scroll handler ── */
+  var raf = 0;
+  function tick() {
+    raf = 0;
+    var sy = window.scrollY;
+    var docH = document.documentElement.scrollHeight - window.innerHeight;
+
+    /* Progress bar */
+    bar.style.transform = 'scaleX(' + Math.min(sy / Math.max(docH, 1), 1) + ')';
+
+    /* Hero parallax — only while hero is visible */
+    if (heroImg && heroSection && sy < heroSection.offsetHeight + 100) {
+      heroImg.style.transform = 'translateY(' + (sy * 0.25) + 'px)';
+    }
+  }
+
+  window.addEventListener('scroll', function () {
+    if (!raf) raf = requestAnimationFrame(tick);
+  }, { passive: true });
+  tick(); /* init */
+
+  /* ── 4. Staggered section card reveals ── */
+  /* Re-observe each card individually; assign column-based stagger delay */
+  var cardEls = document.querySelectorAll('.machine-card.fade-in, .project-card.fade-in');
+  if (cardEls.length) {
+    var cardObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          /* column position within its row — delay already set inline, keep it */
+          el.classList.add('visible');
+          cardObs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.07, rootMargin: '0px 0px -24px 0px' });
+    cardEls.forEach(function (el) { cardObs.observe(el); });
+  }
+
+  /* ── 5. Section heading text-reveal (clip-path slide-up) ── */
+  var headings = document.querySelectorAll('.section-heading');
+  headings.forEach(function (h) {
+    h.style.overflow = 'hidden';
+    h.style.display = 'block';
+    /* Wrap inner content */
+    var inner = document.createElement('span');
+    inner.style.cssText = 'display:block;transform:translateY(110%);opacity:0;transition:transform 0.75s cubic-bezier(0.22,1,0.36,1),opacity 0.55s ease;';
+    while (h.firstChild) inner.appendChild(h.firstChild);
+    h.appendChild(inner);
+
+    var hObs = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        inner.style.transform = 'translateY(0)';
+        inner.style.opacity = '1';
+        hObs.disconnect();
+      }
+    }, { threshold: 0.3 });
+    hObs.observe(h);
+  });
+
+  /* ── 6. Accent lines draw in on scroll ── */
+  document.querySelectorAll('.accent-line').forEach(function (line) {
+    line.style.cssText += ';transform:scaleX(0);transform-origin:left;transition:transform 0.55s cubic-bezier(0.4,0,0.2,1) 0.1s;';
+    var aObs = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        line.style.transform = 'scaleX(1)';
+        aObs.disconnect();
+      }
+    }, { threshold: 0.5 });
+    aObs.observe(line);
+  });
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+node_modules/
+temporary screenshots/
+index.html.backup
+.DS_Store
+.claude/
